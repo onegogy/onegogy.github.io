@@ -1,0 +1,3058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egor Krasnov — Product Designer</title>
+    <meta name="description" content="Product Designer based in Prague. 6 years designing digital products for Czech and international clients.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="galaxy.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #f7f5f2;
+            --bg-surface:   #edeae5;
+            --bg-card:      #e5e2dc;
+            --border:       #dedbd5;
+            --border-mid:   #ccc9c2;
+            --text-primary: #1a1717;
+            --text-mid:     #6b6560;
+            --text-dim:     #b0aba4;
+            --white:        #ffffff;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        html { overflow-x: hidden; }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            padding-top: 58px;
+        }
+
+        /* ─── NOISE OVERLAY ─────────────────────────── */
+        .noise {
+            position: fixed;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+            mix-blend-mode: overlay;
+        }
+
+        /* ─── LOADER ────────────────────────────────── */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            overflow: hidden;
+            pointer-events: all;
+            background: #f7f5f2;
+        }
+        #loader-half-top,
+        #loader-half-bottom {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: #f7f5f2;
+            transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+            z-index: 1;
+        }
+        #loader-half-top    { top: 0; }
+        #loader-half-bottom { bottom: 0; }
+        #loader.is-done #loader-half-top    { transform: translateY(-100%); }
+        #loader.is-done #loader-half-bottom { transform: translateY(100%); }
+
+        #loader-inner {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.25s ease;
+        }
+        #loader.is-done #loader-inner { opacity: 0; }
+
+        #loader-ek-wrap {
+            position: relative;
+            font-family: 'Geologica', sans-serif;
+            font-weight: 900;
+            font-size: clamp(96px, 16vw, 200px);
+            letter-spacing: -0.04em;
+            line-height: 1;
+            user-select: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        #loader-ek-grey {
+            display: block;
+            color: #cac6c0;
+        }
+        #loader-ek-white {
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: -40px;
+            display: block;
+            color: transparent;
+            background: linear-gradient(to top, var(--text-primary) var(--fill, 0%), transparent var(--fill, 0%));
+            -webkit-background-clip: text;
+            background-clip: text;
+            will-change: background;
+        }
+
+        /* ─── NAV ───────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 600;
+            background: rgba(247,245,242,0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            transform: translateY(0);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (max-width: 900px) {
+            nav {
+                background: transparent;
+                border-bottom: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+            nav::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0;
+                height: 180%;
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+                z-index: -1;
+                pointer-events: none;
+            }
+        }
+        nav.nav--hidden { transform: translateY(-100%); }
+        .nav-inner {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .nav-logo {
+            font-family: 'Geologica', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+            height: 24px;
+            display: flex;
+            align-items: center;
+        }
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-center a {
+            font-size: 12.5px;
+            font-weight: 400;
+            color: var(--text-dim);
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            transition: color 0.2s;
+        }
+        .nav-center a:hover { color: var(--text-primary); }
+
+        /* Lang switcher */
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+        .lang-btn {
+            font-family: 'Geologica', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 7px;
+            border-radius: 3px;
+            transition: color 0.2s, background 0.2s;
+            line-height: 1;
+        }
+        .lang-btn:hover { color: var(--text-mid); }
+        .lang-btn.active {
+            color: var(--text-primary);
+            background: var(--border);
+        }
+
+
+        /* ─── HERO ──────────────────────────────────── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            padding: 0 32px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-galaxy {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0;
+        }
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='0.07'/%3E%3C/svg%3E");
+            background-size: 250px 250px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hero-glow {
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hero-content {
+            max-width: 1160px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-eyebrow {
+            font-size: 11.5px;
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            margin-bottom: 36px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            width: 28px;
+            height: 1px;
+            background: var(--text-dim);
+            flex-shrink: 0;
+        }
+        .hero-name {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(68px, 10.5vw, 148px);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.045em;
+            color: var(--text-primary);
+            margin-bottom: 52px;
+        }
+        .hero-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .hero-tagline {
+            font-size: clamp(14px, 1.6vw, 16px);
+            font-weight: 300;
+            color: var(--text-mid);
+            max-width: 420px;
+            line-height: 1.65;
+        }
+        .hero-aside {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .hero-role {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-align: right;
+        }
+        .hero-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-mid);
+            margin-bottom: 16px;
+        }
+        .hero-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: blink 2.4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+        .hero-scroll {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            font-size: 10.5px;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            user-select: none;
+        }
+
+        /* ─── HERO PHOTOS ───────────────────────────── */
+        .hero-photos {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .hero-photo {
+            position: absolute;
+            border-radius: 3px;
+            overflow: hidden;
+            will-change: transform;
+            box-shadow: 0 16px 56px rgba(0,0,0,0.14);
+        }
+        .hero-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        @media (min-width: 900px) {
+            .hero-photo:nth-child(1) { width: 360px !important; height: 470px !important; }
+            .hero-photo:nth-child(2) { width: 295px !important; height: 385px !important; }
+            .hero-photo:nth-child(3) { width: 245px !important; height: 320px !important; }
+            .hero-photo:nth-child(4) { width: 265px !important; height: 345px !important; }
+            .hero-photo:nth-child(5) { width: 215px !important; height: 280px !important; }
+            .hero-photo:nth-child(6) { width: 230px !important; height: 300px !important; }
+            .hero-photo:nth-child(7) { width: 200px !important; height: 260px !important; }
+            .hero-photo:nth-child(8) { width: 190px !important; height: 250px !important; }
+        }
+
+        /* ─── MARQUEE ───────────────────────────────── */
+        .marquee-wrap {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            padding: 14px 0;
+            background: var(--bg-surface);
+        }
+        .marquee-inner {
+            display: flex;
+            width: max-content;
+            animation: scroll-left 36s linear infinite;
+        }
+        .marquee-inner:hover { animation-play-state: paused; }
+        .marquee-group {
+            display: flex;
+            flex-shrink: 0;
+        }
+        .marquee-item {
+            font-family: 'Geologica', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .marquee-item::after {
+            content: '✦';
+            font-size: 8px;
+            color: var(--border-mid);
+            margin-left: 32px;
+        }
+        @keyframes scroll-left {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ─── SHARED SECTION STYLES ─────────────────── */
+        .section {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 120px 32px;
+        }
+        .section-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-dim);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 56px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ─── ABOUT ─────────────────────────────────── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+            align-items: start;
+        }
+        .about-heading {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(30px, 3.2vw, 44px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            position: sticky;
+            top: 78px;
+        }
+        .about-body p {
+            font-size: 16.5px;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-mid);
+            margin-bottom: 22px;
+        }
+        .about-body p:last-of-type { margin-bottom: 0; }
+        .about-body strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+        .about-stats > div {
+            padding: 28px 0 4px;
+            border-right: 1px solid var(--border);
+            padding-right: 24px;
+            margin-right: -1px;
+        }
+        .about-stats > div:last-child {
+            border-right: none;
+            padding-left: 24px;
+            padding-right: 0;
+        }
+        .about-stats > div:nth-child(2) {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        .stat-num {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(44px, 5.5vw, 72px);
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 10px;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .about-stats > div:hover .stat-num {
+            transform: translateY(-3px);
+        }
+        .stat-desc {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ─── EXPERIENCE ────────────────────────────── */
+        #experience { border-top: none; }
+        .exp-item {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 56px;
+            padding: 44px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .exp-item:last-child { border-bottom: none; }
+        .exp-co {
+            font-family: 'Geologica', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .exp-period {
+            font-size: 11.5px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .exp-role {
+            font-family: 'Geologica', sans-serif;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .exp-desc {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text-mid);
+            line-height: 1.75;
+        }
+        .exp-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 16px;
+        }
+        .tag {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-mid);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-mid);
+            padding: 5px 13px;
+            border-radius: 100px;
+            letter-spacing: 0.01em;
+            transition: all 0.2s;
+        }
+        .tag:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--text-dim);
+        }
+
+        /* ─── SERVICES ──────────────────────────────── */
+        #services { border-top: none; }
+        .svc-wrap .svc-row:first-child::before { display: none; }
+        .svc-wrap {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 32px 120px;
+        }
+        .svc-row {
+            display: grid;
+            grid-template-columns: 64px 1fr 340px;
+            gap: 0 56px;
+            align-items: center;
+            padding: 52px 0;
+            position: relative;
+            cursor: default;
+            overflow: hidden;
+        }
+        /* line draws on scroll */
+        .svc-row::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: var(--border);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .svc-row.in::before { transform: scaleX(1); }
+        /* hover fill */
+        .svc-row-bg {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.03);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+        .svc-row:hover .svc-row-bg { transform: scaleX(1); }
+        /* bottom accent bar */
+        .svc-row-accent {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 1px;
+            background: var(--text-dim);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .svc-row:hover .svc-row-accent { transform: scaleX(1); }
+
+        .svc-row-num {
+            font-family: 'Geologica', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.12em;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.1s, color 0.3s;
+        }
+        .svc-row.in .svc-row-num { opacity: 1; }
+        .svc-row:hover .svc-row-num { color: var(--text-mid); }
+
+        .svc-row-title {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(28px, 3.6vw, 50px);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            color: var(--text-primary);
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.6s ease 0.08s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, color 0.3s;
+        }
+        .svc-row.in .svc-row-title { opacity: 1; transform: translateY(0); }
+        .svc-row:hover .svc-row-title { color: var(--text-primary); }
+
+        .svc-row-right {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease 0.18s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
+        }
+        .svc-row.in .svc-row-right { opacity: 1; transform: translateY(0); }
+
+        .svc-row-icon {
+            width: 26px;
+            height: 26px;
+            color: var(--text-dim);
+            display: block;
+            margin-bottom: 16px;
+            transition: color 0.3s;
+        }
+        .svc-row:hover .svc-row-icon { color: var(--text-mid); }
+
+        .svc-row-desc {
+            font-size: 13.5px;
+            font-weight: 300;
+            color: var(--text-mid);
+            line-height: 1.75;
+        }
+
+        /* ─── PROCESS ───────────────────────────────── */
+        .proc-wrap {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 32px 120px;
+        }
+        .proc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--border);
+        }
+        .proc-card {
+            background: var(--bg);
+            padding: 52px 48px 48px;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            cursor: default;
+            transition: background 0.35s;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        .proc-card.in {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1), background 0.35s;
+        }
+        .proc-card:nth-child(2) { transition-delay: 0.1s; }
+        .proc-card:nth-child(3) { transition-delay: 0.18s; }
+        .proc-card:nth-child(4) { transition-delay: 0.26s; }
+        .proc-card:hover { background: var(--bg-card); }
+
+        /* large ghost number background */
+        .proc-card-ghost {
+            font-family: 'Geologica', sans-serif;
+            font-size: 160px;
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            line-height: 1;
+            color: rgba(0,0,0,0.04);
+            position: absolute;
+            right: -8px;
+            bottom: -16px;
+            user-select: none;
+            pointer-events: none;
+            transition: color 0.35s;
+        }
+        .proc-card:hover .proc-card-ghost { color: rgba(0,0,0,0.07); }
+
+        .proc-card-step {
+            font-family: 'Geologica', sans-serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.14em;
+            margin-bottom: auto;
+            padding-bottom: 48px;
+        }
+        .proc-card-title {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(22px, 2.4vw, 32px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+        .proc-card:hover .proc-card-title { color: var(--text-primary); }
+        .proc-card-desc {
+            font-size: 13.5px;
+            font-weight: 300;
+            color: var(--text-mid);
+            line-height: 1.72;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── CASE STUDIES ─────────────────────────── */
+        #work { border-top: none; }
+        .cs-list {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 32px 120px;
+        }
+        .cs-item {
+            padding: 120px 0;
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .cs-item.in { opacity: 1; transform: translateY(0); }
+        .cs-item:nth-child(2) { transition-delay: 0.1s; }
+        .cs-item:nth-child(3) { transition-delay: 0.2s; }
+        .cs-item-head {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 52px;
+        }
+        .cs-item-num {
+            font-family: 'Geologica', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.14em;
+            flex-shrink: 0;
+        }
+        .cs-item-cat {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .cs-item-head::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .cs-item-body {
+            display: grid;
+            grid-template-columns: 1fr 1.7fr;
+            gap: 80px;
+            align-items: start;
+        }
+        .cs-item-title {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(34px, 4.2vw, 58px);
+            font-weight: 700;
+            letter-spacing: -0.045em;
+            color: var(--text-primary);
+            line-height: 1.0;
+            position: sticky;
+            top: 80px;
+        }
+        .cs-visit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-mid);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: var(--border-mid);
+            transition: color 0.2s, text-decoration-color 0.2s;
+        }
+        .cs-visit-btn:hover {
+            color: var(--text-primary);
+            text-decoration-color: var(--text-primary);
+        }
+        .cs-visit-btn--wip {
+            color: var(--text-dim);
+            text-decoration: none;
+            cursor: default;
+        }
+        .cs-visit-btn--wip:hover {
+            color: var(--text-dim);
+            text-decoration: none;
+        }
+        .cs-item-desc {
+            font-size: 15px;
+            font-weight: 300;
+            color: var(--text-mid);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+        .cs-item-body .exp-tags { margin-bottom: 24px; margin-top: 0; }
+        .cs-item-body .cs-item-desc { margin-bottom: 12px; }
+        .cs-item-footer {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .cs-item-result {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(18px, 1.8vw, 24px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+        .cs-item-nda {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ─── MOCKUP ────────────────────────────────── */
+        .cs-mockup {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 24px;
+            margin-top: 80px;
+            padding: 60px 0 0;
+        }
+        .phone {
+            width: 210px;
+            height: 430px;
+            border-radius: 40px;
+            border: 1.5px solid rgba(255,255,255,0.09);
+            background: #111;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 40px 80px rgba(0,0,0,0.55),
+                0 0 0 1px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.07);
+            transform: rotate(-4deg) translateY(24px);
+            flex-shrink: 0;
+        }
+        .phone--center {
+            transform: rotate(0deg) translateY(0px);
+            width: 224px;
+            height: 458px;
+            z-index: 2;
+            border-color: rgba(255,255,255,0.13);
+        }
+        .phone:last-child {
+            transform: rotate(4deg) translateY(24px);
+        }
+        .phone-pill {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 72px;
+            height: 8px;
+            background: #111111;
+            border-radius: 10px;
+            z-index: 10;
+        }
+        .phone-screen {
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 36px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Onboarding screen ── */
+        .phone-screen--onboard {
+            background: linear-gradient(155deg, #1a0a2e 0%, #0f1a1a 50%, #0a1a10 100%);
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-bottom: 44px;
+        }
+        .ps-ob-logo {
+            font-family: 'Geologica', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #a78bfa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+        .ps-ob-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.04em;
+            margin-bottom: 28px;
+        }
+        .ps-ob-cta {
+            width: 100%;
+            text-align: center;
+            padding: 13px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #a78bfa, #34d399);
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Dashboard screen ── */
+        .phone-screen--dash {
+            background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%);
+            gap: 14px;
+        }
+        .ps-dash-top { margin-top: 6px; }
+        .ps-dash-greeting {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: -0.01em;
+        }
+        .ps-dash-date {
+            font-size: 10px;
+            color: rgba(255,255,255,0.28);
+            margin-top: 2px;
+            letter-spacing: 0.04em;
+        }
+        .ps-ring-wrap {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            align-self: center;
+            margin: 4px 0;
+        }
+        .ps-ring { width: 80px; height: 80px; }
+        .ps-ring-inner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .ps-ring-val {
+            font-family: 'Geologica', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.03em;
+        }
+        .ps-ring-lbl {
+            font-size: 8px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.03em;
+        }
+        .ps-rows { display: flex; flex-direction: column; gap: 9px; }
+        .ps-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.38);
+        }
+        .ps-row span:first-child { width: 38px; flex-shrink: 0; }
+        .ps-row span:last-child  { width: 26px; flex-shrink: 0; text-align: right; }
+        .ps-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .ps-bar-fill { height: 100%; border-radius: 4px; }
+
+        /* ── Chat screen ── */
+        .phone-screen--chat {
+            background: linear-gradient(180deg, #0a0a14 0%, #0a0a0a 100%);
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .ps-chat-header {
+            font-family: 'Geologica', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            margin-top: 6px;
+            letter-spacing: -0.01em;
+        }
+        .ps-bubbles {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            padding: 4px 0;
+        }
+        .ps-bubble {
+            font-size: 9.5px;
+            line-height: 1.5;
+            padding: 8px 11px;
+            border-radius: 14px;
+            max-width: 86%;
+        }
+        .ps-bubble--in {
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.7);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .ps-bubble--out {
+            background: linear-gradient(135deg, rgba(167,139,250,0.18), rgba(52,211,153,0.12));
+            color: rgba(255,255,255,0.75);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(167,139,250,0.12);
+        }
+        .ps-chat-input {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 8px;
+        }
+        .ps-chat-field {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* ── Browser mockup (Volvista) ── */
+        .cs-mockup--desktop { align-items: center; padding-bottom: 48px; }
+        .browser {
+            width: min(700px, 100%);
+            border-radius: 12px;
+            border: 1.5px solid rgba(255,255,255,0.09);
+            background: #0e0e0e;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
+            overflow: hidden;
+        }
+        .browser-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .browser-dots { display: flex; gap: 6px; flex-shrink: 0; }
+        .browser-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+        .browser-url {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.28);
+            text-align: center;
+            max-width: 200px;
+            margin: 0 auto;
+            letter-spacing: 0.02em;
+        }
+        .vol-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: #080808;
+        }
+        .vol-logo {
+            font-family: 'Geologica', sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.88);
+        }
+        .vol-nav-links { display: flex; gap: 20px; }
+        .vol-nav-link { font-size: 9.5px; color: rgba(255,255,255,0.28); letter-spacing: 0.04em; }
+        .vol-hero {
+            background: linear-gradient(155deg, #07101e 0%, #0c1328 60%, #060c1a 100%);
+            padding: 28px 24px 24px;
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+        }
+        .vol-hero-eyebrow {
+            font-size: 8px;
+            color: rgba(59,130,246,0.65);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .vol-hero-heading {
+            font-family: 'Geologica', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: rgba(255,255,255,0.95);
+            letter-spacing: -0.04em;
+            line-height: 1.08;
+            margin-bottom: 10px;
+            max-width: 260px;
+        }
+        .vol-hero-sub {
+            font-size: 9.5px;
+            color: rgba(255,255,255,0.3);
+            line-height: 1.5;
+            max-width: 220px;
+            margin-bottom: 14px;
+        }
+        .vol-hero-btn {
+            display: inline-block;
+            background: rgba(59,130,246,0.14);
+            border: 1px solid rgba(59,130,246,0.22);
+            color: rgba(147,197,253,0.75);
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            border-radius: 6px;
+        }
+        .vol-hero-car {
+            position: absolute;
+            right: -16px;
+            bottom: 0;
+            width: 360px;
+            opacity: 0.65;
+        }
+        .vol-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: #080808;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .vol-card {
+            padding: 14px 16px;
+            border-right: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .vol-card:last-child { border-right: none; }
+        .vol-card-img {
+            height: 48px;
+            background: linear-gradient(135deg, #0d1520 0%, #111b28 100%);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+        .vol-card-model {
+            font-family: 'Geologica', sans-serif;
+            font-size: 9.5px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.03em;
+        }
+        .vol-card-price { font-size: 8px; color: rgba(255,255,255,0.28); }
+        .vol-card-tag {
+            font-size: 7px;
+            background: rgba(59,130,246,0.1);
+            color: rgba(147,197,253,0.55);
+            padding: 2px 5px;
+            border-radius: 3px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            align-self: flex-start;
+            margin-top: 2px;
+        }
+
+        /* ── Trail Master screens ── */
+        .phone-screen--trail-home {
+            background: linear-gradient(180deg, #080e08 0%, #0b0f0a 100%);
+            gap: 8px;
+        }
+        .tm-header {
+            font-family: 'Geologica', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.85);
+            margin-top: 6px;
+            letter-spacing: -0.02em;
+        }
+        .tm-sub { font-size: 9px; color: rgba(255,255,255,0.25); margin-top: -4px; }
+        .tm-feat {
+            background: linear-gradient(135deg, rgba(74,222,128,0.09), rgba(16,185,129,0.05));
+            border: 1px solid rgba(74,222,128,0.11);
+            border-radius: 12px;
+            padding: 11px 13px;
+        }
+        .tm-feat-label {
+            font-size: 7.5px;
+            color: rgba(74,222,128,0.55);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .tm-feat-name {
+            font-family: 'Geologica', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.88);
+            letter-spacing: -0.02em;
+        }
+        .tm-feat-meta { font-size: 8.5px; color: rgba(255,255,255,0.28); margin-top: 3px; }
+        .tm-list { display: flex; flex-direction: column; gap: 5px; }
+        .tm-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 9px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .tm-item-icon {
+            width: 27px;
+            height: 27px;
+            border-radius: 7px;
+            background: rgba(74,222,128,0.09);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .tm-item-name { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.72); letter-spacing: -0.01em; }
+        .tm-item-meta { font-size: 8px; color: rgba(255,255,255,0.25); margin-top: 1px; }
+
+        .phone-screen--trail-book {
+            background: linear-gradient(180deg, #080d0b 0%, #0a0f0a 100%);
+            gap: 8px;
+        }
+        .tb-header {
+            font-family: 'Geologica', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.8);
+            margin-top: 6px;
+            letter-spacing: -0.02em;
+        }
+        .tb-trail-name { font-size: 10px; font-weight: 600; color: rgba(74,222,128,0.75); }
+        .tb-divider { height: 1px; background: rgba(255,255,255,0.05); margin: 2px 0; }
+        .tb-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            color: rgba(255,255,255,0.35);
+        }
+        .tb-row strong { color: rgba(255,255,255,0.72); font-weight: 600; }
+        .tb-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            margin-top: 2px;
+        }
+        .tb-total-label { font-size: 9px; color: rgba(255,255,255,0.38); }
+        .tb-total-price {
+            font-family: 'Geologica', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: -0.03em;
+        }
+        .tb-pay-btn {
+            background: linear-gradient(135deg, #14532d, #166534);
+            border-radius: 12px;
+            padding: 11px;
+            text-align: center;
+            font-size: 9.5px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.88);
+            letter-spacing: 0.03em;
+        }
+        .tb-pay-sub { font-size: 7.5px; color: rgba(255,255,255,0.2); text-align: center; }
+
+        .phone-screen--trail-ai {
+            background: linear-gradient(180deg, #0a0810 0%, #090a10 100%);
+            gap: 8px;
+            justify-content: space-between;
+        }
+        .tai-header {
+            font-family: 'Geologica', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.72);
+            text-align: center;
+            margin-top: 6px;
+            letter-spacing: -0.01em;
+        }
+        .tai-prompt {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(167,139,250,0.14);
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.32);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tai-prompt-icon { color: rgba(167,139,250,0.6); flex-shrink: 0; }
+        .tai-post {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(167,139,250,0.07), rgba(74,222,128,0.04));
+            border: 1px solid rgba(167,139,250,0.1);
+            border-radius: 12px;
+            padding: 11px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .tai-post-platform { font-size: 7.5px; color: rgba(167,139,250,0.55); letter-spacing: 0.08em; text-transform: uppercase; }
+        .tai-post-text { font-size: 8.5px; line-height: 1.65; color: rgba(255,255,255,0.62); }
+        .tai-post-tags { font-size: 8px; color: rgba(167,139,250,0.45); line-height: 1.6; }
+        .tai-gen-btn {
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.18);
+            border-radius: 10px;
+            padding: 9px;
+            text-align: center;
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(167,139,250,0.75);
+            letter-spacing: 0.03em;
+        }
+
+        /* ── Radial image carousel ── */
+        .img-carousel {
+            --card-trans-duration: 1400ms;
+            --card-trans-easing: linear(0, 0.01 0.8%, 0.038 1.6%, 0.154 3.4%, 0.781 9.7%, 1.01 12.5%, 1.089 13.8%, 1.153 15.2%, 1.195 16.6%, 1.219 18%, 1.224 19.7%, 1.208 21.6%, 1.172 23.6%, 1.057 28.6%, 1.007 31.2%, 0.969 34.1%, 0.951 37.1%, 0.953 40.9%, 0.998 50.4%, 1.011 56%, 0.998 74.7%, 1);
+            --card-width: 210px;
+            --radius: 630px;
+            --cards: 3;
+            --arc-size: 0.12;
+            --arc-center: 0.75;
+            --arc-start: calc(var(--arc-center) - var(--arc-size) / 2);
+            --arc-shift: 0;
+            --arc-shift-delta: 0.005;
+            position: relative;
+            width: var(--card-width);
+            height: 0;
+            margin: 0 auto;
+        }
+        .img-carousel > div {
+            --arc-step: calc(var(--arc-size) / (var(--cards) - 1));
+            position: absolute;
+            width: var(--card-width);
+            offset-path: circle(var(--radius) at 50% 100%);
+            offset-distance: calc(
+                (var(--arc-start) + (var(--card-i) - 1) * var(--arc-step) + var(--arc-shift)) * 100%
+            );
+            offset-rotate: auto;
+            offset-anchor: 50% 0%;
+            transition: all var(--card-trans-duration) var(--card-trans-easing);
+            cursor: pointer;
+        }
+        .img-carousel > div:nth-child(1) { --card-i: 1; z-index: 0; }
+        .img-carousel > div:nth-child(2) { --card-i: 2; z-index: 2; }
+        .img-carousel > div:nth-child(3) { --card-i: 3; z-index: 0; }
+        .img-carousel > div:hover { offset-anchor: 50% 3%; }
+        .img-carousel > div:hover + div             { --arc-shift: calc(var(--arc-shift-delta) * 2); }
+        .img-carousel > div:hover + div + div       { --arc-shift: calc(var(--arc-shift-delta) * 1); }
+        .img-carousel > div:has(+ *:hover)          { --arc-shift: calc(var(--arc-shift-delta) * -2); }
+        .img-carousel > div:has(+ * + *:hover)      { --arc-shift: calc(var(--arc-shift-delta) * -1); }
+        .img-carousel > div > img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .cs-mockup--carousel {
+            height: 560px;
+            min-height: unset;
+            margin-top: 32px !important;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            align-items: flex-end;
+        }
+        .cs-mockup--carousel .img-carousel {
+            transform: translateY(138px);
+        }
+
+        @media (max-width: 760px) {
+            .cs-mockup { gap: 12px; }
+            .phone { width: 140px; height: 286px; border-radius: 28px; }
+            .phone-pill { width: 50px; height: 6px; }
+            .phone--center { width: 150px; height: 306px; }
+            .phone-screen { padding: 28px 12px 14px; border-radius: 28px; }
+            .ps-ob-logo { font-size: 20px; }
+            .ps-ring-wrap, .ps-ring { width: 56px; height: 56px; }
+            .ps-ring-val { font-size: 10px; }
+            /* Volvista mockup — scale phones down */
+            #vol-phone  { width: 100px !important; right: -10px !important; bottom: -24px !important; }
+            #vol-phone2 { width: 92px  !important; left:  -10px !important; bottom: -28px !important; }
+            .cs-mockup--desktop { padding-bottom: 36px; overflow: visible; }
+        }
+        @media (max-width: 480px) {
+            #vol-phone, #vol-phone2 { display: none !important; }
+            .cs-mockup--desktop { padding-bottom: 0; }
+        }
+
+        /* ─── SMM CAROUSEL ─────────────────────────── */
+        .smm-carousel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 720px;
+            overflow: hidden;
+            margin-bottom: 120px;
+        }
+        .smm-row {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .smm-track {
+            display: flex;
+            gap: 8px;
+            width: max-content;
+            will-change: transform;
+        }
+        .smm-row--right .smm-track { animation: smm-right 110s linear infinite; }
+        .smm-row--mid   .smm-track { animation: smm-left  130s linear infinite; }
+        .smm-row--left  .smm-track { animation: smm-right 100s linear infinite; }
+        @keyframes smm-right {
+            from { transform: translateX(-50%); }
+            to   { transform: translateX(0); }
+        }
+        @keyframes smm-left {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+        .smm-track img {
+            height: 100%;
+            width: calc((720px - 16px) / 3);
+            display: block;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        /* ─── CONTACT ───────────────────────────────── */
+        #contact {
+            text-align: center;
+        }
+        #contact .section { padding: 120px 32px 240px; }
+        .contact-eyebrow {
+            font-size: 10.5px;
+            color: var(--text-dim);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 44px;
+        }
+        .contact-heading {
+            font-family: 'Geologica', sans-serif;
+            font-size: clamp(52px, 9vw, 112px);
+            font-weight: 700;
+            letter-spacing: -0.045em;
+            line-height: 0.9;
+            color: var(--text-primary);
+            margin-bottom: 56px;
+        }
+        .contact-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-meta {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11.5px;
+            color: var(--text-dim);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 30px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13.5px;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: all 0.22s;
+        }
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg);
+            border: none;
+            cursor: pointer;
+            justify-content: center;
+        }
+        .btn-primary:hover { background: #000; }
+        .btn-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .btn-ghost {
+            border: 1px solid var(--border);
+            color: var(--text-mid);
+        }
+        .btn-ghost:hover {
+            border-color: var(--border-mid);
+            color: var(--text-primary);
+        }
+
+        /* ─── FADE-UP ANIMATION ─────────────────────── */
+        .fu {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .fu.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fu-d1 { transition-delay: 0.08s; }
+        .fu-d2 { transition-delay: 0.16s; }
+        .fu-d3 { transition-delay: 0.24s; }
+        .fu-d4 { transition-delay: 0.32s; }
+
+        /* ─── RESPONSIVE ────────────────────────────── */
+        @media (max-width: 900px) {
+            .nav-inner { padding: 0 20px; }
+            .hero { padding: 0 20px 64px; }
+            .hero-scroll { display: none; }
+            .hero-aside { align-items: flex-start; }
+            .hero-role { text-align: left; }
+            .section { padding: 80px 20px; }
+            .about-grid { grid-template-columns: 1fr; gap: 32px; }
+            .about-heading { position: static; font-size: 28px; }
+            .exp-item { grid-template-columns: 1fr; gap: 12px; }
+            .svc-wrap { padding: 0 20px 80px; }
+            .svc-row {
+                grid-template-columns: 40px 1fr;
+                grid-template-rows: auto auto;
+                gap: 10px 20px;
+                padding: 36px 0;
+            }
+            .svc-row-right { grid-column: 2; }
+            .cs-list { padding: 0 20px 80px; }
+            .cs-item { padding: 48px 0; }
+            .cs-item-body { grid-template-columns: 1fr; gap: 32px; }
+            .cs-item-title { position: static; font-size: 28px; }
+            .proc-wrap { padding: 0 20px 80px; }
+            .proc-grid { grid-template-columns: 1fr; }
+            .proc-card { min-height: auto; padding: 36px 28px 28px; }
+            .proc-card-ghost { font-size: 110px; }
+            #contact .section { padding: 100px 20px 180px; }
+            nav .nav-center { display: none; }
+            nav .lang-switch { display: none; }
+        }
+        @media (max-width: 560px) {
+            .hero-name { font-size: clamp(48px, 14vw, 72px); }
+            .about-stats > div { padding: 20px 0 4px; }
+            .about-stats > div:nth-child(2) { padding-left: 16px; padding-right: 16px; }
+            .about-stats > div:last-child { padding-left: 16px; }
+            .contact-heading { word-break: break-word; }
+            .svc-row { padding: 28px 0; }
+            .proc-card { padding: 28px 20px 20px; }
+        }
+        /* ─── MOBILE MENU ───────────────────────────── */
+        .mob-burger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 32px;
+            height: 32px;
+        }
+        @media (max-width: 900px) {
+            .mob-burger { display: flex; }
+        }
+        .mob-burger-line {
+            display: block;
+            width: 20px;
+            height: 1.5px;
+            background: var(--text-primary);
+            border-radius: 1px;
+            transform-origin: center;
+            flex-shrink: 0;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .mob-burger.is-open .mob-burger-line:nth-child(1) {
+            transform: translateY(3.25px) rotate(45deg);
+        }
+        .mob-burger.is-open .mob-burger-line:nth-child(2) {
+            transform: translateY(-3.25px) rotate(-45deg);
+        }
+
+        /* overlay */
+        .mob-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .mob-menu.is-open { pointer-events: auto; }
+
+        /* pre-layers */
+        .mob-menu-layer {
+            position: absolute;
+            inset: 0;
+            transform: translateX(101%);
+        }
+        .mob-menu-layer--1 { background: #c0bab3; }
+        .mob-menu-layer--2 { background: #ccc6bf; }
+
+        .mob-menu.is-open .mob-menu-layer--1 {
+            transform: translateX(0);
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1) 0s;
+        }
+        .mob-menu.is-open .mob-menu-layer--2 {
+            transform: translateX(0);
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1) 0.07s;
+        }
+        .mob-menu.is-closing .mob-menu-layer--1,
+        .mob-menu.is-closing .mob-menu-layer--2 {
+            transform: translateX(101%);
+            transition: transform 0.32s cubic-bezier(0.4,0,1,1) 0s;
+        }
+
+        /* panel */
+        .mob-menu-panel {
+            position: absolute;
+            inset: 0;
+            background: var(--bg);
+            transform: translateX(101%);
+            display: flex;
+            flex-direction: column;
+            padding: 74px 28px 48px;
+            overflow-y: auto;
+        }
+        .mob-menu.is-open .mob-menu-panel {
+            transform: translateX(0);
+            transition: transform 0.65s cubic-bezier(0.16,1,0.3,1) 0.14s;
+        }
+        .mob-menu.is-closing .mob-menu-panel {
+            transform: translateX(101%);
+            transition: transform 0.32s cubic-bezier(0.4,0,1,1) 0s;
+        }
+
+        /* items */
+        .mob-menu-list {
+            list-style: none;
+            padding: 0; margin: 0;
+            display: flex;
+            flex-direction: column;
+            margin-top: 16px;
+        }
+        .mob-menu-item {
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+        }
+        .mob-menu-item:first-child { border-top: none; }
+        .mob-menu-item:last-child { border-bottom: none; }
+        .mob-menu-item a { text-decoration: none; display: block; }
+
+        .mob-menu-label {
+            display: block;
+            font-family: 'Geologica', sans-serif;
+            font-weight: 800;
+            font-size: clamp(40px, 11vw, 60px);
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            transform: translateY(130%) rotate(8deg);
+            transform-origin: 0% 100%;
+            will-change: transform;
+            transition: transform 0.2s cubic-bezier(0.16,1,0.3,1);
+            transition-delay: 0s;
+        }
+        .mob-menu.is-open .mob-menu-label {
+            transform: translateY(0) rotate(0);
+            transition-duration: 1s;
+            transition-delay: var(--mob-delay, 0.28s);
+        }
+        .mob-menu.is-closing .mob-menu-label {
+            transform: translateY(130%) rotate(8deg);
+            transition-duration: 0.2s;
+            transition-delay: 0s;
+        }
+        .mob-menu-label:hover { opacity: 0.45; }
+
+        /* contact block in menu */
+        .mob-menu-contact {
+            margin-top: auto;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .mob-menu-contact-eyebrow {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .mob-menu-contact-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .mob-menu-contact-btns .btn {
+            font-size: 13px;
+            padding: 10px 16px;
+            height: auto;
+        }
+        .mob-menu-contact-meta {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── LOADER ─────────────────────────────────── -->
+<div id="loader">
+    <div id="loader-half-top"></div>
+    <div id="loader-half-bottom"></div>
+    <div id="loader-inner">
+        <div id="loader-ek-wrap">
+            <span id="loader-ek-grey">EK</span>
+            <span id="loader-ek-white">EK</span>
+        </div>
+    </div>
+</div>
+
+<div class="noise"></div>
+
+<!-- ── NAV ─────────────────────────────────────────── -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">EK</a>
+        <ul class="nav-center">
+            <li><a href="#about"      data-i18n="nav-about"></a></li>
+            <li><a href="#work"       data-i18n="nav-work"></a></li>
+            <li><a href="#services"   data-i18n="nav-svc"></a></li>
+            <li><a href="#process"    data-i18n="nav-proc"></a></li>
+            <li><a href="#experience" data-i18n="nav-exp"></a></li>
+            <li><a href="#contact"    data-i18n="nav-contact"></a></li>
+        </ul>
+        <div class="lang-switch">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn"        data-lang="cs">CS</button>
+            <button class="lang-btn"        data-lang="ru">RU</button>
+        </div>
+        <button class="mob-burger" id="mob-burger" aria-label="Open menu" aria-expanded="false">
+            <span class="mob-burger-line"></span>
+            <span class="mob-burger-line"></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ── MOBILE MENU ───────────────────────────────── -->
+<div class="mob-menu" id="mob-menu" aria-hidden="true">
+    <div class="mob-menu-layer mob-menu-layer--1"></div>
+    <div class="mob-menu-layer mob-menu-layer--2"></div>
+    <div class="mob-menu-panel">
+        <ul class="mob-menu-list">
+            <li class="mob-menu-item" style="--mob-delay:0.28s"><a href="#about"      class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-about">About</span></a></li>
+            <li class="mob-menu-item" style="--mob-delay:0.36s"><a href="#work"       class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-work">Work</span></a></li>
+            <li class="mob-menu-item" style="--mob-delay:0.44s"><a href="#services"   class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-svc">Services</span></a></li>
+            <li class="mob-menu-item" style="--mob-delay:0.52s"><a href="#process"    class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-proc">Process</span></a></li>
+            <li class="mob-menu-item" style="--mob-delay:0.60s"><a href="#experience" class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-exp">Experience</span></a></li>
+            <li class="mob-menu-item" style="--mob-delay:0.68s"><a href="#contact"    class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-contact">Contact</span></a></li>
+        </ul>
+        <div class="mob-menu-contact">
+            <p class="mob-menu-contact-eyebrow" data-i18n="contact-eyebrow">Shall we work together?</p>
+            <div class="mob-menu-contact-btns">
+                <button class="btn btn-primary" id="mob-copy-email-btn">
+                    <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="9" height="10" rx="1.2"/>
+                        <rect x="5" y="1" width="9" height="10" rx="1.2"/>
+                    </svg>
+                    <span id="mob-copy-email-text">hello@krasnov.digital</span>
+                </button>
+                <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">LinkedIn ↗</a>
+            </div>
+            <div class="mob-menu-contact-meta">
+                <span>IČO: 14082331</span>
+                <span data-i18n="footer-copy"></span>
+            </div>
+            <div class="lang-switch" style="margin-top:20px; gap:10px;">
+                <button class="lang-btn mob-lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn mob-lang-btn"        data-lang="cs">CS</button>
+                <button class="lang-btn mob-lang-btn"        data-lang="ru">RU</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────── -->
+<div class="hero">
+    <div class="hero-content">
+        <p class="hero-eyebrow" data-i18n="hero-eyebrow"></p>
+        <h1 class="hero-name">Egor<br>Krasnov</h1>
+        <div class="hero-bottom">
+            <p class="hero-tagline" data-i18n="hero-tagline"></p>
+            <div class="hero-aside">
+                <span class="hero-role" data-i18n="hero-role"></span>
+                <span class="hero-status">
+                    <span class="hero-status-dot"></span>
+                    <span data-i18n="hero-status"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll" data-i18n="hero-scroll"></div>
+</div>
+
+<!-- ── MARQUEE ───────────────────────────────────────── -->
+<div class="marquee-wrap">
+    <div class="marquee-inner">
+        <div class="marquee-group">
+            <span class="marquee-item">Aleslim</span>
+            <span class="marquee-item">Volvista</span>
+            <span class="marquee-item">Arval</span>
+            <span class="marquee-item">Schlieger</span>
+            <span class="marquee-item">Verdikto</span>
+            <span class="marquee-item">Picards</span>
+            <span class="marquee-item">Sazkabet</span>
+            <span class="marquee-item">DENEVY</span>
+            <span class="marquee-item">Juno.one</span>
+            <span class="marquee-item">SDMK Design Czech</span>
+            <span class="marquee-item">Ohhira.cz</span>
+            <span class="marquee-item">eClients</span>
+            <span class="marquee-item">JMWebDevelopment</span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+            <span class="marquee-item">Aleslim</span>
+            <span class="marquee-item">Volvista</span>
+            <span class="marquee-item">Arval</span>
+            <span class="marquee-item">Schlieger</span>
+            <span class="marquee-item">Verdikto</span>
+            <span class="marquee-item">Picards</span>
+            <span class="marquee-item">Sazkabet</span>
+            <span class="marquee-item">DENEVY</span>
+            <span class="marquee-item">Juno.one</span>
+            <span class="marquee-item">SDMK Design Czech</span>
+            <span class="marquee-item">Ohhira.cz</span>
+            <span class="marquee-item">eClients</span>
+            <span class="marquee-item">JMWebDevelopment</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── ABOUT ─────────────────────────────────────────── -->
+<div id="about">
+    <div class="section">
+        <p class="section-label" data-i18n="about-label"></p>
+        <div class="about-grid">
+            <div>
+                <h2 class="about-heading fu" data-i18n="about-heading"></h2>
+            </div>
+            <div class="about-body fu fu-d1">
+                <p data-i18n="about-p1"></p>
+                <p data-i18n="about-p2"></p>
+                <p data-i18n="about-p3"></p>
+                <p data-i18n="about-p4"></p>
+                <div class="about-stats">
+                    <div>
+                        <div class="stat-num" data-count="6" data-suffix="+">6+</div>
+                        <div class="stat-desc" data-i18n="stat-1"></div>
+                    </div>
+                    <div>
+                        <div class="stat-num" data-count="20" data-suffix="+">20+</div>
+                        <div class="stat-desc" data-i18n="stat-2"></div>
+                    </div>
+                    <div>
+                        <div class="stat-num" data-count="3" data-suffix="">3</div>
+                        <div class="stat-desc" data-i18n="stat-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CASE STUDIES ──────────────────────────────────── -->
+<div id="work">
+    <div class="cs-list">
+
+        <!-- ── Project 1: Volvista ── -->
+        <div class="cs-item" id="vol-item">
+            <div class="cs-item-head">
+                <span class="cs-item-cat" data-i18n="cs3-cat"></span>
+            </div>
+            <div class="cs-item-body">
+                <h3 class="cs-item-title" data-i18n="cs3-title"></h3>
+                <div>
+                    <div class="exp-tags">
+                        <span class="tag">User Experience</span>
+                        <span class="tag">User Interface</span>
+                        <span class="tag">Design System</span>
+                        <span class="tag">Metrics</span>
+                        <span class="tag">Feedback</span>
+                    </div>
+                    <p class="cs-item-desc" data-i18n="cs3-desc"></p>
+                    <a href="https://www.volvista.cz/" target="_blank" rel="noopener noreferrer" class="cs-visit-btn" data-i18n="cs3-visit"></a>
+                </div>
+            </div>
+            <div class="cs-mockup cs-mockup--desktop">
+                <div id="vol-browser" style="position:relative;width:min(720px,100%);">
+                    <img id="vol-laptop" src="projects/volvista-mockup.png" alt="Volvista website mockup" style="width:100%;display:block;will-change:transform;">
+                    <img id="vol-phone" src="projects/volvo-11-listopadu-mockup.png" alt="Volvista mobile mockup" style="position:absolute;bottom:-40px;right:-48px;width:168px;will-change:transform;">
+                    <img id="vol-phone2" src="projects/volvista-detail-mockup.png" alt="Volvista detail mockup" style="position:absolute;bottom:-56px;left:-44px;width:156px;will-change:transform;">
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Project 3: Trail Master ── -->
+        <div class="cs-item">
+            <div class="cs-item-head">
+                <span class="cs-item-cat" data-i18n="cs4-cat"></span>
+            </div>
+            <div class="cs-item-body">
+                <h3 class="cs-item-title" data-i18n="cs4-title"></h3>
+                <div>
+                    <div class="exp-tags">
+                        <span class="tag">Vibe-Coding</span>
+                        <span class="tag">Mobile App</span>
+                        <span class="tag">Design</span>
+                        <span class="tag">Frontend</span>
+                        <span class="tag">Backend</span>
+                    </div>
+                    <p class="cs-item-desc" data-i18n="cs4-desc"></p>
+                    <span class="cs-visit-btn cs-visit-btn--wip" data-i18n="cs4-wip"></span>
+                </div>
+            </div>
+            <div class="cs-mockup cs-mockup--carousel">
+                <div class="img-carousel">
+                    <div><img src="projects/tripmaster-hikes-mockup.png" alt="Trail Master hikes"></div>
+                    <div><img src="projects/tripmaster-detail-mockup.png" alt="Trail Master detail"></div>
+                    <div><img src="projects/tripmaster-edit-mockup.png" alt="Trail Master edit"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── SMM CAROUSEL ──────────────────────────────────── -->
+<div class="smm-carousel">
+    <div class="smm-row smm-row--right"><div class="smm-track" id="smm-track-1"></div></div>
+    <div class="smm-row smm-row--mid">  <div class="smm-track" id="smm-track-2"></div></div>
+    <div class="smm-row smm-row--left"> <div class="smm-track" id="smm-track-3"></div></div>
+</div>
+<script>
+(function () {
+    var s = [
+        "1 - 1080x1080.png",
+        "Probiotika.png",
+        "2 - 1080x1080.png",
+        "Co je hořčík a proč ho potřebujete víc_.png",
+        "3 - 1080x1080.png",
+        "Vánoční sleva 10 pct na vše.png",
+        "4 - 1080x1080.png",
+        "Chybí vám dárek k vánocům_ Darujte kousek zdraví!.png",
+        "5 - 1080x1080.png",
+        "Potěšte svého miláčka dárkem, který má smysl.png",
+        "6 - 1080x1080.png",
+        "Black week na Ohhira.cz.png",
+        "7 - 1080x1080.png",
+        "Nestíháte nákupy Vánočních dárků_ Vyřešte to dárkovým voucherem na Ohhira.cz.png",
+        "8 - 1080x1080.png",
+        "Darujte pod stromeček kousek zdraví.png",
+        "9 - 1080x1080.png",
+        "Proč jsou probiotika OM-X Dr. Ohhira úplně jiná liga_.png",
+        "10 - 1080x1080.png",
+        "Chystáte se za zimní exotickou dovolenou_ Přibalte si kvalitní probiotika.png",
+        "11 - 1080x1080.png",
+        "Vánoční sleva 10 pct na vše-1.png",
+        "12 - 1080x1080.png",
+        "Honíte dárky na poslední chvíli_.png",
+        "13 - 1080x1080.png",
+        "Jak ovlivňuje mikrobiom naše zdraví_ Rozhovor s uznávaným mikrobiologem Dr. Petrem Horou a majiteli Ohhira.cz.png",
+        "14 - 1080x1080.png",
+        "Probiotika v2.png",
+        "15 - 1080x1080.png",
+        "Ne každý hořčík je stejný.png",
+        "16 - 1080x1080.png",
+        "Doprodáváme zásoby vitamínu D3-K2.png",
+        "17 - 1080x1080.png",
+        "Crohnova choroba.png",
+        "Facebook Post 1.png",
+        "Co je hořčík a proč ho potřebujete víc_ v2.png",
+        "Facebook Post 3.png",
+        "Ulcerózní kolitida.png",
+        "Facebook Post semicolon.png",
+        "Black week na Ohhira.cz v2.png",
+        "Chybí vám dárek k vánocům_ Darujte kousek zdraví! v2.png",
+        "Nestíháte nákupy Vánočních dárků_ Vyřešte to dárkovým voucherem na Ohhira.cz-1.png",
+        "Chybí vám dárek k vánocům_ Darujte kousek zdraví! v2-1.png",
+        "Potěšte svého miláčka dárkem, který má smysl v2.png",
+        "Chybí vám dárek k vánocům_ Darujte kousek zdraví!-1.png",
+        "Vánoční sleva 10 pct na vše-2.png",
+        "Doprodáváme zásoby vitamínu D3-K2-1.png",
+        "Vánoční sleva 10 pct na vše-3.png",
+        "Doručujeme do 24. prosínce.png",
+        "Vánoční sleva 10 pct na vše (2).png",
+        "Nestíháte nákupy Vánočních dárků_ Vyřešte to dárkovým voucherem na Ohhira.cz v2.png",
+        "Proč a kdy si s sebou na dovolenou vzít probiotika_.png",
+        "Jak ovlivňuje mikrobiom naše zdraví_ Speciální rozhovor s influencerkou Mamoudomishou a Dr. Petrem Horou.png",
+        "Nestíháte nákupy Vánočních dárků_ Vyřešte to dárkovým voucherem na Ohhira.cz-2.png"
+    ];
+    var rows = [
+        s.slice(0, 18),
+        s.slice(18, 36),
+        s.slice(36)
+    ];
+
+    rows.forEach(function(imgs, i) {
+        var track = document.getElementById('smm-track-' + (i + 1));
+        // duplicate for seamless loop
+        [imgs, imgs].forEach(function(set) {
+            set.forEach(function(name) {
+                var img = document.createElement('img');
+                img.src = 'smm/' + encodeURIComponent(name);
+                img.alt = '';
+                track.appendChild(img);
+            });
+        });
+    });
+}());
+</script>
+
+<!-- ── SERVICES ──────────────────────────────────────── -->
+<div id="services">
+    <div class="section" style="padding-bottom: 0;">
+        <p class="section-label" data-i18n="svc-label"></p>
+    </div>
+    <div class="svc-wrap">
+
+        <div class="svc-row">
+            <div class="svc-row-bg"></div>
+            <div class="svc-row-accent"></div>
+            <div class="svc-row-num">01</div>
+            <div class="svc-row-title" data-i18n="svc1-title"></div>
+            <div class="svc-row-right">
+                <svg class="svc-row-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <circle cx="18" cy="18" r="11"/>
+                    <circle cx="18" cy="18" r="4.5" fill="currentColor" stroke="none" opacity="0.4"/>
+                    <line x1="18" y1="4" x2="18" y2="7"/>
+                    <line x1="18" y1="29" x2="18" y2="32"/>
+                    <line x1="4" y1="18" x2="7" y2="18"/>
+                    <line x1="29" y1="18" x2="32" y2="18"/>
+                </svg>
+                <p class="svc-row-desc" data-i18n="svc1-desc"></p>
+            </div>
+        </div>
+
+        <div class="svc-row">
+            <div class="svc-row-bg"></div>
+            <div class="svc-row-accent"></div>
+            <div class="svc-row-num">02</div>
+            <div class="svc-row-title" data-i18n="svc2-title"></div>
+            <div class="svc-row-right">
+                <svg class="svc-row-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <rect x="5" y="5" width="11" height="11" rx="1"/>
+                    <rect x="20" y="5" width="11" height="11" rx="1"/>
+                    <rect x="5" y="20" width="11" height="11" rx="1"/>
+                    <rect x="20" y="20" width="11" height="11" rx="1" fill="currentColor" stroke="none" opacity="0.3"/>
+                </svg>
+                <p class="svc-row-desc" data-i18n="svc2-desc"></p>
+            </div>
+        </div>
+
+        <div class="svc-row">
+            <div class="svc-row-bg"></div>
+            <div class="svc-row-accent"></div>
+            <div class="svc-row-num">03</div>
+            <div class="svc-row-title" data-i18n="svc3-title"></div>
+            <div class="svc-row-right">
+                <svg class="svc-row-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <rect x="4" y="4" width="28" height="28" rx="2"/>
+                    <line x1="4" y1="13" x2="32" y2="13" opacity="0.5"/>
+                    <line x1="13" y1="13" x2="13" y2="32" opacity="0.5"/>
+                    <rect x="18" y="18" width="9" height="9" rx="1" fill="currentColor" stroke="none" opacity="0.28"/>
+                </svg>
+                <p class="svc-row-desc" data-i18n="svc3-desc"></p>
+            </div>
+        </div>
+
+        <div class="svc-row">
+            <div class="svc-row-bg"></div>
+            <div class="svc-row-accent"></div>
+            <div class="svc-row-num">04</div>
+            <div class="svc-row-title" data-i18n="svc4-title"></div>
+            <div class="svc-row-right">
+                <svg class="svc-row-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4,26 11,17 17,22 26,9 32,12"/>
+                    <circle cx="32" cy="9" r="3" fill="currentColor" stroke="none" opacity="0.45"/>
+                </svg>
+                <p class="svc-row-desc" data-i18n="svc4-desc"></p>
+            </div>
+        </div>
+
+        <div class="svc-row">
+            <div class="svc-row-bg"></div>
+            <div class="svc-row-accent"></div>
+            <div class="svc-row-num">05</div>
+            <div class="svc-row-title" data-i18n="svc5-title"></div>
+            <div class="svc-row-right">
+                <svg class="svc-row-icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <rect x="4" y="5" width="28" height="26" rx="2"/>
+                    <line x1="4" y1="12" x2="32" y2="12"/>
+                    <line x1="10" y1="18" x2="22" y2="18" opacity="0.6"/>
+                    <line x1="10" y1="23" x2="19" y2="23" opacity="0.4"/>
+                    <circle cx="28" cy="20.5" r="4.5" fill="currentColor" stroke="none" opacity="0.2"/>
+                </svg>
+                <p class="svc-row-desc" data-i18n="svc5-desc"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── PROCESS ───────────────────────────────────────── -->
+<div id="process">
+    <div class="section" style="padding-bottom: 0;">
+        <p class="section-label" data-i18n="proc-label"></p>
+    </div>
+    <div class="proc-wrap">
+        <div class="proc-grid">
+
+            <div class="proc-card">
+                <div class="proc-card-ghost">01</div>
+                <div class="proc-card-step">01</div>
+                <div class="proc-card-title" data-i18n="proc1-title"></div>
+                <p class="proc-card-desc" data-i18n="proc1-desc"></p>
+            </div>
+
+            <div class="proc-card">
+                <div class="proc-card-ghost">02</div>
+                <div class="proc-card-step">02</div>
+                <div class="proc-card-title" data-i18n="proc2-title"></div>
+                <p class="proc-card-desc" data-i18n="proc2-desc"></p>
+            </div>
+
+            <div class="proc-card">
+                <div class="proc-card-ghost">03</div>
+                <div class="proc-card-step">03</div>
+                <div class="proc-card-title" data-i18n="proc3-title"></div>
+                <p class="proc-card-desc" data-i18n="proc3-desc"></p>
+            </div>
+
+            <div class="proc-card">
+                <div class="proc-card-ghost">04</div>
+                <div class="proc-card-step">04</div>
+                <div class="proc-card-title" data-i18n="proc4-title"></div>
+                <p class="proc-card-desc" data-i18n="proc4-desc"></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ── EXPERIENCE ────────────────────────────────────── -->
+<div id="experience">
+    <div class="section">
+        <p class="section-label" data-i18n="exp-label"></p>
+
+        <div class="exp-item fu">
+            <div>
+                <div class="exp-co" data-i18n="exp-freelance-co"></div>
+                <div class="exp-period" data-i18n="exp-freelance-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-freelance-role"></div>
+                <p class="exp-desc" data-i18n="exp-freelance-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">Product Design</span>
+                    <span class="tag">UX Research</span>
+                    <span class="tag">UI Design</span>
+                    <span class="tag">Marketing Design</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exp-item fu fu-d1">
+            <div>
+                <div class="exp-co">Picards</div>
+                <div class="exp-period" data-i18n="exp-picards-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-picards-role"></div>
+                <p class="exp-desc" data-i18n="exp-picards-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">E-Commerce</span>
+                    <span class="tag">UX Research</span>
+                    <span class="tag">Wireframing</span>
+                    <span class="tag">Design Systems</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exp-item fu fu-d2">
+            <div>
+                <div class="exp-co">SDMK Design Czech</div>
+                <div class="exp-period" data-i18n="exp-sdmk-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-sdmk-role"></div>
+                <p class="exp-desc" data-i18n="exp-sdmk-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">Mobile Applications</span>
+                    <span class="tag">UX Research</span>
+                    <span class="tag">Design Systems</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exp-item fu fu-d3">
+            <div>
+                <div class="exp-co">DENEVY</div>
+                <div class="exp-period" data-i18n="exp-denevy-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-denevy-role"></div>
+                <p class="exp-desc" data-i18n="exp-denevy-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">UX Research</span>
+                    <span class="tag">UI Design</span>
+                    <span class="tag">Design Systems</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exp-item fu fu-d4">
+            <div>
+                <div class="exp-co">Verdikto</div>
+                <div class="exp-period" data-i18n="exp-verdikto-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-verdikto-role"></div>
+                <p class="exp-desc" data-i18n="exp-verdikto-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">Web Design</span>
+                    <span class="tag">Conversion Optimisation</span>
+                    <span class="tag">Marketing Design</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exp-item fu fu-d4">
+            <div>
+                <div class="exp-co" data-i18n="exp-uni-co"></div>
+                <div class="exp-period" data-i18n="exp-uni-period"></div>
+            </div>
+            <div>
+                <div class="exp-role" data-i18n="exp-uni-role"></div>
+                <p class="exp-desc" data-i18n="exp-uni-desc"></p>
+                <div class="exp-tags">
+                    <span class="tag">Business Strategy</span>
+                    <span class="tag">Management</span>
+                    <span class="tag">Economics</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── CONTACT ───────────────────────────────────────── -->
+<div id="contact">
+    <div class="section">
+        <p class="contact-eyebrow" data-i18n="contact-eyebrow"></p>
+        <h2 class="contact-heading fu" data-i18n="contact-heading"></h2>
+        <div class="contact-btns fu fu-d1">
+            <button class="btn btn-primary" id="copy-email-btn">
+                <svg class="btn-icon" id="copy-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="9" height="10" rx="1.2"/>
+                    <rect x="5" y="1" width="9" height="10" rx="1.2"/>
+                </svg>
+                <span id="copy-email-text">hello@krasnov.digital</span>
+            </button>
+            <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                LinkedIn ↗
+            </a>
+        </div>
+        <div class="contact-meta fu fu-d2">
+            <span>IČO: 14082331</span>
+            <span data-i18n="footer-copy"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+const translations = {
+    en: {
+        'nav-about':    'About',
+        'nav-exp':      'Experience',
+        'nav-work':     'Work',
+        'nav-svc':      'Services',
+        'nav-proc':     'Process',
+        'nav-contact':  'Contact',
+
+        'hero-eyebrow': 'Product Designer · Prague, Czech Republic',
+        'hero-tagline': 'I find what\'s holding your product back and help fix it — through research, design, AI, vibe-coding, and close collaboration with the product team.',
+        'hero-role':    'UX / UI & Graphic Design',
+        'hero-status':  'Available for projects',
+        'hero-scroll':  'Scroll',
+
+        'about-label':   'About',
+        'about-heading': 'Turning complexity<br>into clarity',
+        'about-p1':      'Since 2020, I\'ve been helping companies build digital products they can be truly proud of — from <strong>mobile apps and complex platforms</strong> to e-commerce stores and landing pages.',
+        'about-p2':      'My job is to <strong>find what\'s holding a product back and help fix it</strong>. That means understanding the business, the users, and the market — then designing solutions that are practical, validated, and ready to ship.',
+        'about-p3':      'I work <strong>both independently and in teams</strong> with designers, developers, and marketers on small and large software products.',
+        'about-p4':      'I actively <strong>use AI tools</strong> — they help me think faster, go deeper into details, and focus on what truly requires a human approach.',
+        'stat-1': 'Years of experience',
+        'stat-2': 'Projects worked with',
+        'stat-3': 'Languages spoken',
+
+        'exp-label': 'Experience',
+        'exp-picards-period': 'Sep 2023 — Aug 2025<br>Prague, CZ · 2 years',
+        'exp-picards-role':   'UX/UI Designer',
+        'exp-picards-desc':   'Improved the architecture, navigation and user flows of a betting platform. Developed approaches to loading and displaying large amounts of data. Designed hundreds of solutions for product growth, updated the interface and introduced a dark theme. Built a CMS for content management and supported development with a design system and documentation.',
+        'exp-sdmk-period':    'Sep 2022 — Mar 2023<br>Prague, CZ · 7 months',
+        'exp-sdmk-role':      'UX Designer',
+        'exp-sdmk-desc':      'Worked on updating and creating several client projects. Designed a mobile app for finding work crews from scratch. Developed a custom design system to accelerate the launch of new projects.',
+        'exp-denevy-period':  'Mar 2022 — Aug 2022<br>Prague, CZ · 6 months',
+        'exp-denevy-role':    'Product Designer',
+        'exp-denevy-desc':    'Took part in the global redesign of the Juno.one startup by DENEVY. Formed hypotheses, collected and analysed data, conducted testing, improved UX and developed new features. Built the design system and updated the product interface. Also worked on a light redesign of the client startup Ydistri.',
+        'exp-verdikto-period': 'Jan 2022 — Nov 2023<br>Prague, CZ · 1 year',
+        'exp-verdikto-role':   'Product Designer',
+        'exp-verdikto-desc':   'Fully redesigned the startup website. Developed and launched a personal account portal for lawyers. Improved conversion by optimising the client payment flow. Created marketing materials and presentations for social media, the sales team and investors.',
+        'exp-freelance-co':     'Freelance',
+        'exp-freelance-period': 'Oct 2019 — Sep 2025<br>Remote · 6 years',
+        'exp-freelance-role':   'Product Designer',
+        'exp-freelance-desc':   'In partnership with developers and marketers, created digital products, apps, and SMM materials. Worked on projects for Volvista, Autorion, Arval, Aleslim, Ohhira.cz, and many other companies. Took part both in building products from scratch — from first concepts — and in rolling out solutions for existing products.',
+        'exp-uni-co':     'Czech University of Life Sciences Prague',
+        'exp-uni-period': '2019 — 2022<br>Prague, CZ',
+        'exp-uni-role':   'Business Administration & Management',
+        'exp-uni-desc':   'Studied how to be an entrepreneur.',
+
+        'cs3-visit':   'Visit volvista.cz ↗',
+        'cs4-wip':     'Case study in progress',
+        'cs3-cat':     'Car Dealer Website · Volvista · 2023–2026',
+        'cs3-title':   'Online Showroom Improvement',
+        'cs3-desc':    'During the collaboration with Autorion, fully redesigned and improved the UX of online showrooms for Czech car dealers, based on business needs, site analytics and user feedback.',
+        'cs4-cat':     'Trail Master · Pet Project · 2026',
+        'cs4-title':   'Vibe-Coded Mobile App',
+        'cs4-desc':    'Building my own app for organising hiking trips. Practising vibe-coding to better understand app development, data handling, payment integrations and third-party APIs. Going beyond design — learning both frontend and backend.',
+
+        'svc-label':   'What I do',
+        'svc1-title':  'UX Research & Analysis',
+        'svc1-desc':   'Deep market, business and user analysis to uncover pain points and opportunities. I find where your product is losing users — and why.',
+        'svc2-title':  'Product Strategy',
+        'svc2-desc':   'Best-practice solutions with clear implementation strategy. I bridge the gap between user needs, business goals, and technical constraints.',
+        'svc3-title':  'UI Design',
+        'svc3-desc':   'Pixel-perfect interfaces for web, iOS and Android. From wireframes to polished UI with complete design systems and developer-ready specs.',
+        'svc4-title':  'Performance Improvement',
+        'svc4-desc':   'Improving metrics of existing products — conversion, retention, engagement. Data-informed design decisions that actually move the needle.',
+        'svc5-title':  'Marketing Materials',
+        'svc5-desc':   'Presentations, pitch decks, banners and PPC materials that look as good as the product itself. Helping teams communicate their value visually.',
+
+        'proc-label':  'Process',
+        'proc1-title': 'Discover',
+        'proc1-desc':  'Market research, competitor analysis, user interviews, and business goal alignment to understand the full picture.',
+        'proc2-title': 'Define',
+        'proc2-desc':  'Synthesize findings into clear problem statements, prioritized hypotheses, and an actionable direction.',
+        'proc3-title': 'Design',
+        'proc3-desc':  'Wireframes, prototypes, and pixel-perfect UI with complete documentation for seamless development handoff.',
+        'proc4-title': 'Validate',
+        'proc4-desc':  'User testing, metrics tracking, iteration. Close collaboration with the product team throughout.',
+
+        'contact-eyebrow': "Shall we work together?",
+        'contact-heading': 'Let\'s make<br>something cool',
+        'footer-copy':  '© 2026 krasnov.digital. Prague, Czech Republic.',
+    },
+
+    cs: {
+        'nav-about':    'O mně',
+        'nav-exp':      'Zkušenosti',
+        'nav-work':     'Práce',
+        'nav-svc':      'Služby',
+        'nav-proc':     'Proces',
+        'nav-contact':  'Kontakt',
+
+        'hero-eyebrow': 'Product Designer · Praha, Česká republika',
+        'hero-tagline': 'Najdu, co produkt brzdí, a pomůžu to napravit — skrze výzkum, design, AI, vibe-coding a úzkou spolupráci s produktovým týmem.',
+        'hero-role':    'UX / UI & Grafický design',
+        'hero-status':  'Dostupný pro projekty',
+        'hero-scroll':  'Scroll',
+
+        'about-label':   'O mně',
+        'about-heading': 'Přeměňuji složitost<br>v přehlednost',
+        'about-p1':      'Od roku 2020 pomáhám firmám vytvářet digitální produkty, na které mohou být opravdu hrdé — od <strong>mobilních aplikací a komplexních platforem</strong> až po e-commerce obchody a landing pages.',
+        'about-p2':      'Moje práce je <strong>najít, co produkt brzdí, a pomoci to napravit</strong>. To znamená porozumět byznysu, uživatelům i trhu — a pak navrhnout řešení, která jsou praktická, ověřená a připravená k nasazení.',
+        'about-p3':      'Pracuji <strong>jak samostatně, tak v týmech</strong> s designéry, vývojáři a marketéry na malých i velkých softwarových produktech.',
+        'about-p4':      'Aktivně <strong>využívám nástroje AI</strong> — pomáhají mi přemýšlet rychleji, jít více do hloubky a soustředit energii na věci, které skutečně vyžadují lidský přístup.',
+        'stat-1': 'Roky zkušeností',
+        'stat-2': 'Projektů celkem',
+        'stat-3': 'Ovládané jazyky',
+
+        'exp-label': 'Zkušenosti',
+        'exp-picards-period': 'Zář 2023 — Srp 2025<br>Praha, CZ · 2 roky',
+        'exp-picards-role':   'UX/UI Designer',
+        'exp-picards-desc':   'Vylepšil jsem architekturu, navigaci a uživatelské procesy sázkové platformy. Navrhl jsem přístupy k načítání a zobrazování velkého množství dat. Vytvořil stovky řešení pro rozvoj produktu, aktualizoval rozhraní a zavedl tmavé téma. Vytvořil CMS pro správu obsahu a podpořil vývoj design systémem a dokumentací.',
+        'exp-sdmk-period':    'Zář 2022 — Bře 2023<br>Praha, CZ · 7 měsíců',
+        'exp-sdmk-role':      'UX Designer',
+        'exp-sdmk-desc':      'Pracoval jsem na aktualizaci a tvorbě několika klientských projektů. Navrhl jsem od základu mobilní aplikaci pro vyhledávání pracovních čet. Vyvinul vlastní design systém pro zrychlení spouštění nových projektů.',
+        'exp-denevy-period':  'Bře 2022 — Srp 2022<br>Praha, CZ · 6 měsíců',
+        'exp-denevy-role':    'Product Designer',
+        'exp-denevy-desc':    'Podílel jsem se na globální aktualizaci startupu — webového nástroje Juno.one od DENEVY. Formuloval hypotézy, sbíral a analyzoval data, prováděl testování, zlepšoval uživatelský zážitek a vyvíjel nové funkce. Vytvářel design systém a aktualizoval rozhraní produktu. Paralelně pracoval na lehkém redesignu klientského startupu Ydistri.',
+        'exp-verdikto-period': 'Led 2022 — Lis 2023<br>Praha, CZ · 1 rok',
+        'exp-verdikto-role':   'Product Designer',
+        'exp-verdikto-desc':   'Kompletně přepracoval web startupu. Navrhl a spustil osobní portál pro advokáty. Zvýšil konverzi optimalizací platebního procesu pro klienty. Vytvářel marketingové materiály a prezentace pro sociální sítě, obchodní tým a investory.',
+        'exp-freelance-co':     'Freelance',
+        'exp-freelance-period': 'Říj 2019 — Zář 2025<br>Remote · 6 let',
+        'exp-freelance-role':   'Product Designer',
+        'exp-freelance-desc':   'Ve spolupráci s vývojáři a marketéry vytvářel digitální produkty, aplikace a SMM materiály. Pracoval na projektech pro Volvista, Autorion, Arval, Aleslim, Ohhira.cz a mnoho dalších firem. Podílel se jak na budování produktů od nuly — od prvních konceptů — tak na zavádění řešení do existujících produktů.',
+        'exp-uni-co':     'Česká zemědělská univerzita v Praze',
+        'exp-uni-period': '2019 — 2022<br>Praha, CZ',
+        'exp-uni-role':   'Business Administration & Management',
+        'exp-uni-desc':   'Studoval, jak být podnikatelem.',
+
+        'cs3-visit':   'Navštívit volvista.cz ↗',
+        'cs4-wip':     'Případová studie se připravuje',
+        'cs3-cat':     'Car Dealer Website · Volvista · 2023–2026',
+        'cs3-title':   'Vylepšení online autosalonu',
+        'cs3-desc':    'Během spolupráce s Autorion jsem kompletně přepracoval design a zlepšil uživatelský zážitek online autosalonů českých autodealerů na základě obchodních potřeb, statistik webu a zpětné vazby uživatelů.',
+        'cs4-cat':     'Trail Master · Pet Project · 2026',
+        'cs4-title':   'Vibe-coded mobilní aplikace',
+        'cs4-desc':    'Vyvíjím vlastní aplikaci pro organizaci turistických výletů. Procvičuji vibe-coding, abych lépe pochopil procesy vývoje aplikací, práci s daty, integraci plateb a třetích stran API. Učím se nejen design, ale i frontend a backend.',
+
+        'svc-label':   'Co dělám',
+        'svc1-title':  'UX výzkum & Analýza',
+        'svc1-desc':   'Hluboká analýza trhu, byznysu a uživatelů pro odhalení slabých míst a příležitostí. Zjišťuji, kde váš produkt ztrácí uživatele — a proč.',
+        'svc2-title':  'Produktová strategie',
+        'svc2-desc':   'Best-practice řešení s jasnou strategií implementace. Překlenuju propast mezi potřebami uživatelů, obchodními cíli a technickými omezeními.',
+        'svc3-title':  'UI Design',
+        'svc3-desc':   'Pixel-perfect rozhraní pro web, iOS a Android. Od drátových modelů po vyladěné UI s kompletními design systémy a podklady pro vývojáře.',
+        'svc4-title':  'Zlepšování metrik',
+        'svc4-desc':   'Zvyšování metrik existujících produktů — konverze, retence, engagement. Designová rozhodnutí podložená daty, která skutečně mají vliv.',
+        'svc5-title':  'Marketingové materiály',
+        'svc5-desc':   'Prezentace, pitch decky, bannery a PPC materiály, které vypadají stejně dobře jako samotný produkt. Pomáhám týmům vizuálně komunikovat jejich hodnotu.',
+
+        'proc-label':  'Proces',
+        'proc1-title': 'Discover',
+        'proc1-desc':  'Výzkum trhu, analýza konkurence, rozhovory a sladění obchodních cílů pro pochopení celkového kontextu.',
+        'proc2-title': 'Define',
+        'proc2-desc':  'Syntéza zjištění do jasných definic problémů, prioritizovaných hypotéz a akceschopného směru.',
+        'proc3-title': 'Design',
+        'proc3-desc':  'Drátové modely, prototypy a pixel-perfect UI s kompletní dokumentací pro bezproblémové předání vývojářům.',
+        'proc4-title': 'Validate',
+        'proc4-desc':  'Uživatelské testování, sledování metrik, iterace. Úzká spolupráce s produktovým týmem po celou dobu.',
+
+        'contact-eyebrow': 'Spolupracujeme?',
+        'contact-heading': 'Pojďme udělat<br>něco skvělého',
+        'footer-copy':  '© 2026 krasnov.digital. Praha, Česká republika.',
+    },
+
+    ru: {
+        'nav-about':    'Обо мне',
+        'nav-exp':      'Опыт',
+        'nav-work':     'Работы',
+        'nav-svc':      'Услуги',
+        'nav-proc':     'Процесс',
+        'nav-contact':  'Контакт',
+
+        'hero-eyebrow': 'Продуктовый дизайнер · Прага, Чехия',
+        'hero-tagline': 'Нахожу, что мешает продукту расти, и помогаю это исправить — через исследование, дизайн, AI, vibe-coding и тесное взаимодействие с продуктовой командой.',
+        'hero-role':    'UX / UI & Графический дизайн',
+        'hero-status':  'Открыт для проектов',
+        'hero-scroll':  'Скролл',
+
+        'about-label':   'Обо мне',
+        'about-heading': 'Превращаю сложное<br>в понятное',
+        'about-p1':      'С 2020 года я помогаю компаниям создавать цифровые продукты, которыми они могут по-настоящему гордиться — от <strong>мобильных приложений и сложных платформ</strong> до интернет-магазинов и лендингов.',
+        'about-p2':      'Моя работа — <strong>найти, что тормозит продукт, и помочь это исправить</strong>. Это значит понять бизнес, пользователей и рынок — а затем предложить решения, которые практичны, проверены и готовы к внедрению.',
+        'about-p3':      'Работаю <strong>как самостоятельно, так и в командах</strong> с дизайнерами, разработчиками и маркетологами над малыми и крупными программными продуктами.',
+        'about-p4':      'Активно <strong>использую инструменты ИИ</strong> — они помогают мне думать быстрее, углубляться в детали и концентрироваться на том, что действительно требует человеческого подхода.',
+        'stat-1': 'Лет опыта',
+        'stat-2': 'Проектов всего',
+        'stat-3': 'Языка',
+
+        'exp-label': 'Опыт',
+        'exp-picards-period': 'Сен 2023 — Авг 2025<br>Прага, CZ · 2 года',
+        'exp-picards-role':   'UX/UI Дизайнер',
+        'exp-picards-desc':   'Улучшил архитектуру, навигацию и пользовательские процессы букмекерской платформы. Разработал подходы к загрузке и отображению больших объёмов данных. Спроектировал сотни решений для развития продукта, обновил интерфейс и внедрил тёмную тему. Создал CMS для управления контентом, а также поддержал разработку с помощью дизайн-системы и документации.',
+        'exp-sdmk-period':    'Сен 2022 — Мар 2023<br>Прага, CZ · 7 месяцев',
+        'exp-sdmk-role':      'UX Дизайнер',
+        'exp-sdmk-desc':      'Работал над обновлением и созданием нескольких клиентских проектов. Спроектировал с нуля мобильное приложение для поиска бригад. Разработал собственную дизайн-систему для ускоренного запуска новых проектов.',
+        'exp-denevy-period':  'Мар 2022 — Авг 2022<br>Прага, CZ · 6 месяцев',
+        'exp-denevy-role':    'Продуктовый дизайнер',
+        'exp-denevy-desc':    'Участвовал в глобальном обновлении стартапа — веб-инструмента Juno.one от DENEVY. Формировал гипотезы, собирал и анализировал данные, проводил тестирование, улучшал пользовательский опыт и разрабатывал новый функционал. Создавал дизайн-систему и обновлял интерфейс продукта. Параллельно работал над лёгким редизайном клиентского стартапа Ydistri.',
+        'exp-verdikto-period': 'Янв 2022 — Ноя 2023<br>Прага, CZ · 1 год',
+        'exp-verdikto-role':   'Продуктовый дизайнер',
+        'exp-verdikto-desc':   'Полностью переработал сайт стартапа. Разработал и внедрил личный кабинет для адвокатов. Повысил конверсию за счёт оптимизации процесса оплаты для клиентов. Создавал маркетинговые материалы и презентации для социальных сетей, отдела продаж и инвесторов.',
+        'exp-freelance-co':     'Фриланс',
+        'exp-freelance-period': 'Окт 2019 — Сен 2025<br>Удалённо · 6 лет',
+        'exp-freelance-role':   'Продуктовый дизайнер',
+        'exp-freelance-desc':   'В партнёрстве с разработчиками и маркетологами создавал цифровые продукты, приложения и SMM-материалы. Работал над проектами для Volvista, Autorion, Arval, Aleslim, Ohhira.cz и многих других компаний. Участвовал как в разработке проектов с нуля — от первых концепций, так и во внедрении решений в уже существующие продукты.',
+        'exp-uni-co':     'Чешский аграрный университет в Праге',
+        'exp-uni-period': '2019 — 2022<br>Прага, CZ',
+        'exp-uni-role':   'Business Administration & Management',
+        'exp-uni-desc':   'Учился быть предпринимателем.',
+
+        'cs3-visit':   'Перейти на volvista.cz ↗',
+        'cs4-wip':     'Кейс в работе',
+        'cs3-cat':     'Car Dealer Website · Volvista · 2023–2026',
+        'cs3-title':   'Улучшение онлайн-шоурума',
+        'cs3-desc':    'За время сотрудничества с Autorion полностью обновил дизайн и улучшил пользовательский опыт онлайн-шоурумов чешских автодилеров на основе бизнес-потребностей, статистики сайтов и отзывов пользователей.',
+        'cs4-cat':     'Trail Master · Pet Project · 2026',
+        'cs4-title':   'Вайб-кодинг мобильного приложения',
+        'cs4-desc':    'Разрабатываю собственное приложение для организации туристических походов. Практикуюсь в вайб-кодинге, чтобы глубже понять процессы разработки приложений, работу с данными, интеграцию платежей и сторонних API. Осваиваю не только дизайн, но и фронтенд с бэкендом.',
+
+        'svc-label':   'Что я делаю',
+        'svc1-title':  'UX Исследование & Анализ',
+        'svc1-desc':   'Глубокий анализ рынка, бизнеса и пользователей для выявления болевых точек и возможностей. Нахожу, где ваш продукт теряет пользователей — и почему.',
+        'svc2-title':  'Продуктовая стратегия',
+        'svc2-desc':   'Best-practice решения с чёткой стратегией внедрения. Нахожу баланс между потребностями пользователей, бизнес-целями и техническими ограничениями.',
+        'svc3-title':  'UI Дизайн',
+        'svc3-desc':   'Пиксельно-точные интерфейсы для веба, iOS и Android. От вайрфреймов до готового UI с полными дизайн-системами и документацией для разработчиков.',
+        'svc4-title':  'Улучшение метрик',
+        'svc4-desc':   'Повышение метрик существующих продуктов — конверсия, удержание, вовлечённость. Дизайнерские решения на основе данных, которые реально влияют на результат.',
+        'svc5-title':  'Маркетинговые материалы',
+        'svc5-desc':   'Презентации, питч-деки, баннеры и PPC-материалы, которые выглядят так же хорошо, как сам продукт. Помогаю командам визуально передавать ценность.',
+
+        'proc-label':  'Процесс',
+        'proc1-title': 'Discover',
+        'proc1-desc':  'Исследование рынка, анализ конкурентов, интервью с пользователями и согласование бизнес-целей для понимания полной картины.',
+        'proc2-title': 'Define',
+        'proc2-desc':  'Синтез находок в чёткие формулировки проблем, приоритизированные гипотезы и конкретное направление для действий.',
+        'proc3-title': 'Design',
+        'proc3-desc':  'Вайрфреймы, прототипы и пиксельно-точный UI с полной документацией для передачи в разработку.',
+        'proc4-title': 'Validate',
+        'proc4-desc':  'Пользовательское тестирование, отслеживание метрик, итерации. Тесное взаимодействие с продуктовой командой на протяжении всего процесса.',
+
+        'contact-eyebrow': 'Поработаем вместе?',
+        'contact-heading': 'Давайте сделаем<br>что-то крутое',
+        'footer-copy':  '© 2026 krasnov.digital. Прага, Чехия.',
+    }
+};
+
+let currentLang = 'en';
+
+function applyLang(lang) {
+    const t = translations[lang];
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    currentLang = lang;
+    try { localStorage.setItem('lang', lang); } catch(e) {}
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+// Init
+const savedLang = (() => { try { return localStorage.getItem('lang'); } catch(e) { return null; } })();
+applyLang(savedLang && translations[savedLang] ? savedLang : 'en');
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fu, .proc-card, .svc-row, .cs-item').forEach(el => observer.observe(el));
+
+// Copy email button
+const EMAIL = 'hello@krasnov.digital';
+const CLIPBOARD_ICON = `<rect x="1" y="4" width="9" height="10" rx="1.2"/><rect x="5" y="1" width="9" height="10" rx="1.2"/>`;
+const CHECK_ICON = `<polyline points="2,9 6,13 14,4"/>`;
+const COPIED = { en: 'Copied!', cs: 'Zkopírováno!', ru: 'Скопировано!' };
+
+const copyBtn  = document.getElementById('copy-email-btn');
+const copyIcon = document.getElementById('copy-icon');
+const copyText = document.getElementById('copy-email-text');
+
+document.fonts.ready.then(() => { copyBtn.style.minWidth = copyBtn.offsetWidth + 'px'; });
+
+let copyTimeout;
+copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(EMAIL).then(() => {
+        copyIcon.innerHTML = CHECK_ICON;
+        copyText.textContent = COPIED[currentLang] || 'Copied!';
+        clearTimeout(copyTimeout);
+        copyTimeout = setTimeout(() => {
+            copyIcon.innerHTML = CLIPBOARD_ICON;
+            copyText.textContent = EMAIL;
+        }, 2000);
+    });
+});
+</script>
+
+<script>
+// ── LOADER ──────────────────────────────────────
+(function () {
+    var loader   = document.getElementById('loader');
+    var ekWhite  = document.getElementById('loader-ek-white');
+
+    document.body.style.overflow = 'hidden';
+
+    var DURATION = 2200;
+    var start    = null;
+
+    function ease(t) {
+        return t < 0.5
+            ? 8 * t * t * t * t
+            : 1 - Math.pow(-2 * t + 2, 4) / 2;
+    }
+
+    function tick(ts) {
+        if (!start) start = ts;
+        var p   = Math.min((ts - start) / DURATION, 1);
+        var pct = ease(p) * 100;
+
+        ekWhite.style.setProperty('--fill', pct.toFixed(2) + '%');
+
+        if (p < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            // brief pause at 100, then split reveal
+            setTimeout(function () {
+                loader.classList.add('is-done');
+                document.body.style.overflow = '';
+                setTimeout(function () {
+                    loader.style.display = 'none';
+                }, 800);
+            }, 120);
+        }
+    }
+
+    // wait for fonts so EK renders in the correct typeface before animating
+    var ekWrap = document.getElementById('loader-ek-wrap');
+    function startAnim() {
+        ekWrap.style.opacity = '1';
+        requestAnimationFrame(tick);
+    }
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(startAnim);
+    } else {
+        startAnim();
+    }
+}());
+</script>
+
+
+<script>
+// ── VOLVISTA PARALLAX ────────────────────────────
+(function () {
+    var item = document.getElementById('vol-item');
+    var browser = document.getElementById('vol-browser');
+    if (!item || !browser) return;
+
+    var laptop = document.getElementById('vol-laptop');
+    var phone  = document.getElementById('vol-phone');
+    var phone2 = document.getElementById('vol-phone2');
+
+    var layers = [
+        { el: laptop, fx: 0.018, fy: 0.012, cx: 0, cy: 0, tx: 0, ty: 0 },
+        { el: phone,  fx: 0.038, fy: 0.026, cx: 0, cy: 0, tx: 0, ty: 0 },
+        { el: phone2, fx: 0.030, fy: 0.020, cx: 0, cy: 0, tx: 0, ty: 0 },
+    ];
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function tick() {
+        layers.forEach(function (l) {
+            if (!l.el) return;
+            l.cx = lerp(l.cx, l.tx, 0.07);
+            l.cy = lerp(l.cy, l.ty, 0.07);
+            l.el.style.transform = 'translate(' + l.cx + 'px,' + l.cy + 'px)';
+        });
+        requestAnimationFrame(tick);
+    }
+
+    item.addEventListener('mousemove', function (e) {
+        var rect = item.getBoundingClientRect();
+        var mx = rect.left + rect.width  / 2;
+        var my = rect.top  + rect.height / 2;
+        var dx = e.clientX - mx;
+        var dy = e.clientY - my;
+        layers.forEach(function (l) {
+            l.tx = dx * l.fx;
+            l.ty = dy * l.fy;
+        });
+    });
+
+    item.addEventListener('mouseleave', function () {
+        layers.forEach(function (l) { l.tx = 0; l.ty = 0; });
+    });
+
+    tick();
+}());
+</script>
+
+
+<!-- ── MOBILE MENU ───────────────────────────────── -->
+<script>
+(function () {
+    var burger = document.getElementById('mob-burger');
+    var menu   = document.getElementById('mob-menu');
+    if (!burger || !menu) return;
+
+    var closeTimer = null;
+
+    function openMenu() {
+        clearTimeout(closeTimer);
+        menu.classList.remove('is-closing');
+        menu.classList.add('is-open');
+        menu.setAttribute('aria-hidden', 'false');
+        burger.classList.add('is-open');
+        burger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        menu.classList.remove('is-open');
+        menu.classList.add('is-closing');
+        menu.setAttribute('aria-hidden', 'true');
+        burger.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(function () {
+            menu.classList.remove('is-closing');
+        }, 400);
+    }
+
+    burger.addEventListener('click', function () {
+        if (menu.classList.contains('is-open')) closeMenu();
+        else openMenu();
+    });
+
+    /* close on link click */
+    menu.querySelectorAll('.mob-menu-link').forEach(function (a) {
+        a.addEventListener('click', closeMenu);
+    });
+
+    /* copy email in mobile menu — lock width after fonts load */
+    var mobCopyBtn  = document.getElementById('mob-copy-email-btn');
+    var mobCopyText = document.getElementById('mob-copy-email-text');
+    if (mobCopyBtn && mobCopyText) {
+        document.fonts.ready.then(function () {
+            mobCopyBtn.style.minWidth = mobCopyBtn.offsetWidth + 'px';
+        });
+        mobCopyBtn.addEventListener('click', function () {
+            navigator.clipboard.writeText('hello@krasnov.digital').then(function () {
+                var orig = mobCopyText.textContent;
+                mobCopyText.textContent = (typeof COPIED !== 'undefined' ? COPIED[currentLang] : 'Copied!') || 'Copied!';
+                setTimeout(function () { mobCopyText.textContent = orig; }, 2000);
+            });
+        });
+    }
+
+    /* lang buttons in mobile menu */
+    menu.querySelectorAll('.mob-lang-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var lang = btn.dataset.lang;
+            /* trigger desktop lang button to apply translation */
+            var desktopBtn = document.querySelector('.nav-inner .lang-btn[data-lang="' + lang + '"]');
+            if (desktopBtn) desktopBtn.click();
+            /* sync active class in mobile */
+            menu.querySelectorAll('.mob-lang-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+        });
+    });
+
+    /* keep mobile lang in sync when desktop lang changes */
+    document.querySelectorAll('.nav-inner .lang-btn[data-lang]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var lang = btn.dataset.lang;
+            menu.querySelectorAll('.mob-lang-btn').forEach(function (b) {
+                b.classList.toggle('active', b.dataset.lang === lang);
+            });
+        });
+    });
+}());
+</script>
+
+<!-- ── NAV HIDE/SHOW ON SCROLL ────────────────────── -->
+<script>
+(function () {
+    var nav = document.querySelector('nav');
+    if (!nav) return;
+    var lastY = 0;
+    window.addEventListener('scroll', function () {
+        var y = window.scrollY || window.pageYOffset;
+        if (y > lastY && y > 80) {
+            nav.classList.add('nav--hidden');
+        } else {
+            nav.classList.remove('nav--hidden');
+        }
+        lastY = y;
+    }, { passive: true });
+}());
+</script>
+
+<!-- ── STAT COUNT-UP ──────────────────────────────── -->
+<script>
+(function () {
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function animateStat(el) {
+        var target  = parseInt(el.dataset.count, 10);
+        var suffix  = el.dataset.suffix || '';
+        var dur     = 900;
+        var start   = null;
+        function step(ts) {
+            if (!start) start = ts;
+            var progress = Math.min((ts - start) / dur, 1);
+            el.textContent = Math.round(easeOut(progress) * target) + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
+    var stats = document.querySelectorAll('.stat-num[data-count]');
+    var triggered = false;
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting && !triggered) {
+                triggered = true;
+                stats.forEach(function (el, i) {
+                    setTimeout(function () { animateStat(el); }, i * 120);
+                });
+                observer.disconnect();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    if (stats[0]) observer.observe(stats[0].closest('.about-stats'));
+}());
+</script>
+
+<!-- ── GRADUAL BLUR ────────────────────────────────── -->
+<script>
+(function () {
+    var height   = 100;   /* px */
+    var strength = 2.5;
+    var divCount = 8;
+
+    function bezier(p) { return p * p * (3 - 2 * p); }
+
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = [
+        'position:fixed',
+        'bottom:0',
+        'left:0',
+        'right:0',
+        'height:' + height + 'px',
+        'pointer-events:none',
+        'z-index:390',
+        'isolation:isolate'
+    ].join(';');
+
+    var inner = document.createElement('div');
+    inner.style.cssText = 'position:relative;width:100%;height:100%';
+
+    var increment = 100 / divCount;
+    for (var i = 1; i <= divCount; i++) {
+        var progress  = bezier(i / divCount);
+        var blurValue = (0.0625 * (progress * divCount + 1) * strength).toFixed(3);
+        var p1 = Math.round((increment * i - increment) * 10) / 10;
+        var p2 = Math.round((increment * i) * 10) / 10;
+        var p3 = Math.round((increment * i + increment) * 10) / 10;
+        var p4 = Math.round((increment * i + increment * 2) * 10) / 10;
+        var grad = 'transparent ' + p1 + '%, black ' + p2 + '%';
+        if (p3 <= 100) grad += ', black ' + p3 + '%';
+        if (p4 <= 100) grad += ', transparent ' + p4 + '%';
+        var mask = 'linear-gradient(to bottom, ' + grad + ')';
+
+        var layer = document.createElement('div');
+        layer.style.cssText = [
+            'position:absolute',
+            'inset:0',
+            'backdrop-filter:blur(' + blurValue + 'rem)',
+            '-webkit-backdrop-filter:blur(' + blurValue + 'rem)',
+            'mask-image:' + mask,
+            '-webkit-mask-image:' + mask
+        ].join(';');
+        inner.appendChild(layer);
+    }
+
+    wrapper.appendChild(inner);
+    document.body.appendChild(wrapper);
+
+    /* slide up from bottom + fade in on scroll — invisible at top, fully visible after ~200px */
+    wrapper.style.opacity = '0';
+    wrapper.style.transform = 'translateY(100%)';
+    wrapper.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+
+    function onScroll() {
+        var scrollY = window.scrollY || window.pageYOffset;
+        var progress = Math.min(scrollY / 200, 1);
+        wrapper.style.opacity = progress;
+        wrapper.style.transform = 'translateY(' + (100 - progress * 100).toFixed(1) + '%)';
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+}());
+</script>
+
+<!-- ── CLICK SPARK ─────────────────────────────────── -->
+<canvas id="click-spark-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999;"></canvas>
+<script>
+(function () {
+    var canvas = document.getElementById('click-spark-canvas');
+    var ctx = canvas.getContext('2d');
+    var sparks = [];
+    var sparkColor  = '#1a1717';
+    var sparkSize   = 12;
+    var sparkRadius = 24;
+    var sparkCount  = 8;
+    var duration    = 500;
+
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function easeOut(t) { return t * (2 - t); }
+
+    function draw(timestamp) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        sparks = sparks.filter(function (s) {
+            var elapsed  = timestamp - s.startTime;
+            if (elapsed >= duration) return false;
+            var progress = elapsed / duration;
+            var eased    = easeOut(progress);
+            var dist     = eased * sparkRadius;
+            var len      = sparkSize * (1 - eased);
+            var x1 = s.x + dist * Math.cos(s.angle);
+            var y1 = s.y + dist * Math.sin(s.angle);
+            var x2 = s.x + (dist + len) * Math.cos(s.angle);
+            var y2 = s.y + (dist + len) * Math.sin(s.angle);
+            ctx.strokeStyle = sparkColor;
+            ctx.lineWidth   = 1.5;
+            ctx.globalAlpha = 1 - progress;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+            return true;
+        });
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    document.addEventListener('click', function (e) {
+        var now = performance.now();
+        for (var i = 0; i < sparkCount; i++) {
+            sparks.push({
+                x: e.clientX,
+                y: e.clientY,
+                angle: (2 * Math.PI * i) / sparkCount,
+                startTime: now
+            });
+        }
+    });
+}());
+</script>
+
+</body>
+</html>
