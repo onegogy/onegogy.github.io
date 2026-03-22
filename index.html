@@ -2643,7 +2643,13 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 
 // Init
 const savedLang = (() => { try { return localStorage.getItem('lang'); } catch(e) { return null; } })();
-applyLang(savedLang && translations[savedLang] ? savedLang : 'en');
+const browserLang = (() => {
+    const l = (navigator.language || navigator.userLanguage || 'en').toLowerCase().slice(0, 2);
+    if (l === 'cs') return 'cs';
+    if (l === 'ru') return 'ru';
+    return 'en';
+})();
+applyLang(savedLang && translations[savedLang] ? savedLang : browserLang);
 
 // Scroll animations
 const observer = new IntersectionObserver((entries) => {
