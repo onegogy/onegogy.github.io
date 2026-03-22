@@ -1594,7 +1594,7 @@
         /* ─── RESPONSIVE ────────────────────────────── */
         @media (max-width: 900px) {
             .nav-inner { padding: 0 20px; }
-            .hero { padding: 0 20px 64px; }
+            .hero { padding: 0 20px max(64px, calc(64px + env(safe-area-inset-bottom))); }
             .hero-scroll { display: none; }
             .hero-aside { align-items: flex-start; }
             .hero-role { text-align: left; }
@@ -2415,7 +2415,7 @@ const translations = {
         'exp-uni-co':     'Czech University of Life Sciences Prague',
         'exp-uni-period': '2019 — 2022<br>Prague, CZ',
         'exp-uni-role':   'Business Administration & Management',
-        'exp-uni-desc':   'Studied how to be an entrepreneur.',
+        'exp-uni-desc':   'Studied how to be a businessman.',
 
         'cs3-visit':   'Visit volvista.cz ↗',
         'cs4-wip':     'Case study in progress',
@@ -2497,7 +2497,7 @@ const translations = {
         'exp-uni-co':     'Česká zemědělská univerzita v Praze',
         'exp-uni-period': '2019 — 2022<br>Praha, CZ',
         'exp-uni-role':   'Business Administration & Management',
-        'exp-uni-desc':   'Studoval, jak být podnikatelem.',
+        'exp-uni-desc':   'Studoval, jak být businessmanem.',
 
         'cs3-visit':   'Navštívit volvista.cz ↗',
         'cs4-wip':     'Případová studie se připravuje',
@@ -2579,7 +2579,7 @@ const translations = {
         'exp-uni-co':     'Чешский аграрный университет в Праге',
         'exp-uni-period': '2019 — 2022<br>Прага, CZ',
         'exp-uni-role':   'Business Administration & Management',
-        'exp-uni-desc':   'Учился быть предпринимателем.',
+        'exp-uni-desc':   'Учился быть бизнесменом.',
 
         'cs3-visit':   'Перейти на volvista.cz ↗',
         'cs4-wip':     'Кейс в работе',
