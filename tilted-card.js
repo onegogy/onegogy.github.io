@@ -1,7 +1,10 @@
 (function () {
   const ASPECT  = 767 / 958; // photo ratio w/h
-  const GAP     = 20;        // gap from nav and eyebrow
-  const MIN_H   = 320;       // minimum card height
+  const GAP_DESKTOP  = 40;   // gap on desktop
+  const GAP_MOBILE   = 20;   // gap on mobile
+  const MIN_H_DESKTOP = 480; // min height on desktop (≤1600px)
+  const MIN_H_LARGE   = 640; // min height on large screens (≥1600px)
+  const MIN_H_MOBILE  = 320; // min height on mobile
 
   const style = document.createElement('style');
   style.textContent = `
@@ -75,9 +78,13 @@
     const eyeRect     = eyebrow.getBoundingClientRect();
     const eyeTop      = eyeRect.top + window.scrollY; // eyebrow top relative to document
 
-    const cardTop    = navH + GAP - heroScrollTop; // relative to hero
-    const cardBottom = eyeTop - GAP - heroScrollTop;
-    const h = Math.max(cardBottom - cardTop, MIN_H);
+    const vw = window.innerWidth;
+    const isDesktop = vw > 768;
+    const gap   = isDesktop ? GAP_DESKTOP : GAP_MOBILE;
+    const minH  = !isDesktop ? MIN_H_MOBILE : vw >= 1600 ? MIN_H_LARGE : MIN_H_DESKTOP;
+    const cardTop    = navH + gap - heroScrollTop;
+    const cardBottom = eyeTop - gap - heroScrollTop;
+    const h = Math.min(Math.max(cardBottom - cardTop, minH), 640);
     const w = Math.round(h * ASPECT);
 
     wrap.style.top    = cardTop + 'px';
