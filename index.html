@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egor Krasnov — Product Designer</title>
+    <title>Egor Krasnov — Product Designer · Prague</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="description" content="Product Designer based in Prague. 6 years designing digital products for Czech and international clients.">
+    <meta name="description" content="I find what's holding your product back and help fix it — through research, UX/UI design, AI and close collaboration with your team. 6 years, 20+ projects.">
     <!-- Open Graph -->
-    <meta property="og:title" content="Egor Krasnov — Product Designer">
-    <meta property="og:description" content="Product Designer based in Prague. 6 years designing digital products for Czech and international clients.">
+    <meta property="og:title" content="Egor Krasnov — Product Designer · Prague">
+    <meta property="og:description" content="I find what's holding your product back and help fix it — through research, UX/UI design, AI and close collaboration with your team. 6 years, 20+ projects.">
     <meta property="og:image" content="https://onegogy.github.io/Preview.png">
     <meta property="og:url" content="https://onegogy.github.io">
     <meta property="og:type" content="website">
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Egor Krasnov — Product Designer">
-    <meta name="twitter:description" content="Product Designer based in Prague. 6 years designing digital products for Czech and international clients.">
+    <meta name="twitter:title" content="Egor Krasnov — Product Designer · Prague">
+    <meta name="twitter:description" content="I find what's holding your product back and help fix it — through research, UX/UI design, AI and close collaboration with your team. 6 years, 20+ projects.">
     <meta name="twitter:image" content="https://onegogy.github.io/Preview.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2639,6 +2639,25 @@ function applyLang(lang) {
 
     currentLang = lang;
     try { localStorage.setItem('lang', lang); } catch(e) {}
+
+    const metaTitles = {
+        en: 'Egor Krasnov — Product Designer · Prague',
+        cs: 'Egor Krasnov — Product Designer · Praha',
+        ru: 'Egor Krasnov — Продуктовый дизайнер · Прага'
+    };
+    const metaDescs = {
+        en: "I find what's holding your product back and help fix it — through research, UX/UI design, AI and close collaboration with your team. 6 years, 20+ projects.",
+        cs: 'Najdu, co produkt brzdí, a pomůžu to napravit — skrze výzkum, UX/UI design, AI a úzkou spolupráci s vaším týmem. 6 let, 20+ projektů.',
+        ru: 'Нахожу, что мешает продукту расти, и помогаю это исправить — через исследование, UX/UI дизайн, AI и тесное взаимодействие с командой. 6 лет, 20+ проектов.'
+    };
+    const title = metaTitles[lang] || metaTitles.en;
+    const desc  = metaDescs[lang]  || metaDescs.en;
+    document.title = title;
+    document.querySelector('meta[name="description"]').setAttribute('content', desc);
+    document.querySelector('meta[property="og:title"]').setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]').setAttribute('content', desc);
+    document.querySelector('meta[name="twitter:title"]').setAttribute('content', title);
+    document.querySelector('meta[name="twitter:description"]').setAttribute('content', desc);
 }
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
