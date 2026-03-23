@@ -295,6 +295,34 @@
             color: var(--text-primary);
             margin-bottom: 24px;
         }
+        .hero-contacts {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .hero-contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            color: var(--text-mid);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: rgba(0,0,0,0.25);
+            letter-spacing: 0.02em;
+            transition: color 0.2s, text-decoration-color 0.2s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+        }
+        .hero-contact-link:hover {
+            color: var(--text-primary);
+            text-decoration-color: rgba(0,0,0,0.6);
+        }
+        .hero-contact-link svg { flex-shrink: 0; }
         .hero-bottom {
             display: flex;
             align-items: flex-end;
@@ -1785,15 +1813,24 @@
             color: var(--text-dim);
             margin-bottom: 16px;
         }
-        .mob-menu-contact-btns {
+        .mob-menu-contact-list {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 14px;
         }
-        .mob-menu-contact-btns .btn {
-            font-size: 13px;
-            padding: 10px 16px;
-            height: auto;
+        .mob-menu-contact-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .mob-menu-contact-list a:hover { opacity: 0.6; }
+        .mob-menu-contact-list svg {
+            flex-shrink: 0;
+            opacity: 0.5;
         }
         .mob-menu-contact-meta {
             margin-top: 20px;
@@ -1859,16 +1896,29 @@
             <li class="mob-menu-item" style="--mob-delay:0.68s"><a href="#contact"    class="mob-menu-link"><span class="mob-menu-label" data-i18n="nav-contact">Contact</span></a></li>
         </ul>
         <div class="mob-menu-contact">
-            <p class="mob-menu-contact-eyebrow" data-i18n="contact-eyebrow">Shall we work together?</p>
-            <div class="mob-menu-contact-btns">
-                <button class="btn btn-primary" id="mob-copy-email-btn">
-                    <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="1" y="4" width="9" height="10" rx="1.2"/>
-                        <rect x="5" y="1" width="9" height="10" rx="1.2"/>
+            <div class="mob-menu-contact-list">
+                <button id="mob-copy-email-btn" style="display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:500;color:var(--text-primary);background:none;border:none;padding:0;font-family:inherit;cursor:pointer;text-align:left;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.5;">
+                        <rect x="1" y="3" width="14" height="10" rx="1.5"/>
+                        <polyline points="1,3 8,9 15,3"/>
                     </svg>
                     <span id="mob-copy-email-text">hello@krasnov.digital</span>
                 </button>
-                <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">LinkedIn ↗</a>
+                <a href="tel:+420608851611">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 1h3l1.5 3.5-2 1.2a9 9 0 0 0 3.8 3.8l1.2-2L14 11v3a1 1 0 0 1-1 1A12 12 0 0 1 2 2a1 1 0 0 1 1-1z"/>
+                    </svg>
+                    +420 608 851 611
+                </a>
+                <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="1" width="14" height="14" rx="2"/>
+                        <line x1="5" y1="7" x2="5" y2="12"/>
+                        <line x1="5" y1="4.5" x2="5" y2="5"/>
+                        <path d="M8 7v5m0-3a2.5 2.5 0 0 1 5 0v3"/>
+                    </svg>
+                    LinkedIn ↗
+                </a>
             </div>
             <div class="mob-menu-contact-meta">
                 <span>IČO: 14082331</span>
@@ -1888,6 +1938,21 @@
 <div class="hero-content">
         <p class="hero-eyebrow" data-i18n="hero-eyebrow"></p>
         <h1 class="hero-name">Egor<br>Krasnov</h1>
+        <div class="hero-contacts">
+            <button class="hero-contact-link" id="hero-copy-email-btn">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="14" height="10" rx="1.5"/>
+                    <polyline points="1,3 8,9 15,3"/>
+                </svg>
+                <span id="hero-copy-email-text">hello@krasnov.digital</span>
+            </button>
+            <a href="tel:+420608851611" class="hero-contact-link">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 1h3l1.5 3.5-2 1.2a9 9 0 0 0 3.8 3.8l1.2-2L14 11v3a1 1 0 0 1-1 1A12 12 0 0 1 2 2a1 1 0 0 1 1-1z"/>
+                </svg>
+                +420 608 851 611
+            </a>
+        </div>
         <div class="hero-bottom">
             <p class="hero-tagline" data-i18n="hero-tagline"></p>
             <div class="hero-aside">
@@ -2365,6 +2430,7 @@
             <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
                 LinkedIn ↗
             </a>
+            <a href="tel:+420608851611" class="btn btn-ghost">+420 608 851 611</a>
         </div>
         <div class="contact-meta fu fu-d2">
             <span>IČO: 14082331</span>
@@ -2707,6 +2773,20 @@ copyBtn.addEventListener('click', () => {
         copyTimeout = setTimeout(() => {
             copyIcon.innerHTML = CLIPBOARD_ICON;
             copyText.textContent = EMAIL;
+        }, 2000);
+    });
+});
+
+// Hero email copy
+const heroCopyBtn  = document.getElementById('hero-copy-email-btn');
+const heroCopyText = document.getElementById('hero-copy-email-text');
+let heroCopyTimeout;
+heroCopyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(EMAIL).then(() => {
+        heroCopyText.textContent = COPIED[currentLang] || 'Copied!';
+        clearTimeout(heroCopyTimeout);
+        heroCopyTimeout = setTimeout(() => {
+            heroCopyText.textContent = EMAIL;
         }, 2000);
     });
 });
