@@ -1567,9 +1567,15 @@
         }
         .contact-btns {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 12px;
-            justify-content: center;
+        }
+        .contact-btns-row {
+            display: flex;
+            gap: 12px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         .contact-meta {
             margin-top: 32px;
@@ -2420,17 +2426,24 @@
         <p class="contact-eyebrow" data-i18n="contact-eyebrow"></p>
         <h2 class="contact-heading fu" data-i18n="contact-heading"></h2>
         <div class="contact-btns fu fu-d1">
-            <button class="btn btn-primary" id="copy-email-btn">
-                <svg class="btn-icon" id="copy-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="1" y="4" width="9" height="10" rx="1.2"/>
-                    <rect x="5" y="1" width="9" height="10" rx="1.2"/>
-                </svg>
-                <span id="copy-email-text">hello@krasnov.digital</span>
-            </button>
+            <div class="contact-btns-row">
+                <button class="btn btn-primary" id="copy-email-btn">
+                    <svg class="btn-icon" id="copy-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="9" height="10" rx="1.2"/>
+                        <rect x="5" y="1" width="9" height="10" rx="1.2"/>
+                    </svg>
+                    <span id="copy-email-text">hello@krasnov.digital</span>
+                </button>
+                <a href="tel:+420608851611" class="btn btn-ghost">
+                    <svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 1h3l1.5 3.5-2 1.2a9 9 0 0 0 3.8 3.8l1.2-2L14 11v3a1 1 0 0 1-1 1A12 12 0 0 1 2 2a1 1 0 0 1 1-1z"/>
+                    </svg>
+                    +420 608 851 611
+                </a>
+            </div>
             <a href="https://www.linkedin.com/in/egorkrasnov" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
                 LinkedIn ↗
             </a>
-            <a href="tel:+420608851611" class="btn btn-ghost">+420 608 851 611</a>
         </div>
         <div class="contact-meta fu fu-d2">
             <span>IČO: 14082331</span>

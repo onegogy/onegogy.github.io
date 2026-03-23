@@ -1,7 +1,7 @@
 (function () {
   const ASPECT  = 767 / 958; // photo ratio w/h
-  const GAP     = 40;        // gap from nav and eyebrow
-  const MIN_H   = 280;       // minimum card height
+  const GAP     = 20;        // gap from nav and eyebrow
+  const MIN_H   = 400;       // minimum card height
 
   const style = document.createElement('style');
   style.textContent = `
