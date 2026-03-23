@@ -1,12 +1,13 @@
 (function () {
+  const ASPECT  = 767 / 958; // photo ratio w/h
+  const GAP     = 40;        // gap from nav and eyebrow
+  const MIN_H   = 280;       // minimum card height
+
   const style = document.createElement('style');
   style.textContent = `
     #tc-wrap {
       position: absolute;
-      top: 48px;
       right: max(32px, calc((100% - 1160px) / 2));
-      width: 600px;
-      height: 750px;
       perspective: 1200px;
       z-index: 3;
       pointer-events: all;
@@ -40,38 +41,9 @@
       white-space: nowrap;
       transition: opacity 0.15s;
     }
-
-    /* Tablet */
-    @media (max-width: 1200px) {
-      #tc-wrap {
-        width: 380px;
-        height: 475px;
-        top: 40px;
-        right: 24px;
-      }
-    }
-
-    /* Large mobile / small tablet */
     @media (max-width: 768px) {
-      #tc-wrap {
-        width: 56vw;
-        height: 70vw;
-        top: 20px;
-        right: 16px;
-        perspective: 600px;
-      }
       #tc-inner { border-radius: 16px; }
       #tc-caption { display: none; }
-    }
-
-    /* Small mobile */
-    @media (max-width: 480px) {
-      #tc-wrap {
-        width: 52vw;
-        height: 65vw;
-        top: 16px;
-        right: 12px;
-      }
     }
   `;
   document.head.appendChild(style);
@@ -83,18 +55,43 @@
     <div id="tc-wrap">
       <div id="tc-inner">
         <img id="tc-img" src="photo.png" alt="Egor Krasnov" />
-
       </div>
       <div id="tc-caption">Egor Krasnov</div>
     </div>
   `);
 
-  const wrap = document.getElementById('tc-wrap');
-  const inner = document.getElementById('tc-inner');
+  const wrap    = document.getElementById('tc-wrap');
+  const inner   = document.getElementById('tc-inner');
   const caption = document.getElementById('tc-caption');
-  const AMPLITUDE = 12;
-  const SCALE_HOVER = 1.04;
 
+  function resize() {
+    const nav     = document.querySelector('nav');
+    const eyebrow = document.querySelector('.hero-eyebrow');
+    if (!nav || !eyebrow) return;
+
+    const navH        = nav.offsetHeight;
+    const heroRect    = hero.getBoundingClientRect();
+    const heroScrollTop = heroRect.top + window.scrollY; // top of hero relative to document
+    const eyeRect     = eyebrow.getBoundingClientRect();
+    const eyeTop      = eyeRect.top + window.scrollY; // eyebrow top relative to document
+
+    const cardTop    = navH + GAP - heroScrollTop; // relative to hero
+    const cardBottom = eyeTop - GAP - heroScrollTop;
+    const h = Math.max(cardBottom - cardTop, MIN_H);
+    const w = Math.round(h * ASPECT);
+
+    wrap.style.top    = cardTop + 'px';
+    wrap.style.width  = w + 'px';
+    wrap.style.height = h + 'px';
+  }
+
+  // Run after layout settles
+  requestAnimationFrame(() => { resize(); requestAnimationFrame(resize); });
+  window.addEventListener('resize', resize);
+
+  // Tilt logic
+  const AMPLITUDE   = 12;
+  const SCALE_HOVER = 1.04;
   let curRotX = 0, curRotY = 0, curScale = 1;
   let tgtRotX = 0, tgtRotY = 0, tgtScale = 1;
   let raf = null;
@@ -106,7 +103,7 @@
     curRotY = lerp(curRotY, tgtRotY, 0.1);
     curScale = lerp(curScale, tgtScale, 0.1);
     inner.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg) scale(${curScale})`;
-    inner.style.boxShadow = `0 ${20 + (curScale-1)*60}px ${80 + (curScale-1)*80}px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.07)`;
+    inner.style.boxShadow = `0 ${20+(curScale-1)*60}px ${80+(curScale-1)*80}px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.07)`;
     if (
       Math.abs(curRotX - tgtRotX) > 0.02 ||
       Math.abs(curRotY - tgtRotY) > 0.02 ||
@@ -120,7 +117,6 @@
 
   function go() { if (!raf) raf = requestAnimationFrame(tick); }
 
-  // Mouse (desktop)
   wrap.addEventListener('mousemove', e => {
     const rect = inner.getBoundingClientRect();
     const ox = e.clientX - rect.left - rect.width / 2;
@@ -132,32 +128,17 @@
     go();
   });
 
-  wrap.addEventListener('mouseenter', () => {
-    tgtScale = SCALE_HOVER;
-    caption.style.opacity = '1';
-    go();
-  });
+  wrap.addEventListener('mouseenter', () => { tgtScale = SCALE_HOVER; caption.style.opacity = '1'; go(); });
+  wrap.addEventListener('mouseleave', () => { tgtRotX = 0; tgtRotY = 0; tgtScale = 1; caption.style.opacity = '0'; go(); });
 
-  wrap.addEventListener('mouseleave', () => {
-    tgtRotX = 0; tgtRotY = 0; tgtScale = 1;
-    caption.style.opacity = '0';
-    go();
-  });
-
-  // Touch (mobile)
   wrap.addEventListener('touchmove', e => {
     e.preventDefault();
-    const touch = e.touches[0];
+    const t = e.touches[0];
     const rect = inner.getBoundingClientRect();
-    const ox = touch.clientX - rect.left - rect.width / 2;
-    const oy = touch.clientY - rect.top - rect.height / 2;
-    tgtRotX = (oy / (rect.height / 2)) * -(AMPLITUDE * 0.6);
-    tgtRotY = (ox / (rect.width / 2)) * (AMPLITUDE * 0.6);
+    tgtRotX = ((t.clientY - rect.top - rect.height/2) / (rect.height/2)) * -(AMPLITUDE * 0.6);
+    tgtRotY = ((t.clientX - rect.left - rect.width/2) / (rect.width/2)) * (AMPLITUDE * 0.6);
     go();
   }, { passive: false });
 
-  wrap.addEventListener('touchend', () => {
-    tgtRotX = 0; tgtRotY = 0; tgtScale = 1;
-    go();
-  });
+  wrap.addEventListener('touchend', () => { tgtRotX = 0; tgtRotY = 0; tgtScale = 1; go(); });
 })();
