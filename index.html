@@ -228,31 +228,32 @@
         /* ─── HERO ──────────────────────────────────── */
         .hero {
             min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             position: relative;
             overflow: hidden;
+            background: linear-gradient(to right, var(--bg) 50%, #0c0b09 50%);
         }
         .hero-left {
+            width: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             gap: clamp(40px, 7vh, 72px);
             padding: 88px 64px;
-            background: var(--bg);
             position: relative;
             z-index: 2;
         }
-        .hero-right {
-            overflow: hidden;
-            background: #0c0b09;
-        }
         .hero-photo-main {
-            display: block;
-            width: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             height: 100%;
+            width: clamp(300px, 40vw, 660px);
             object-fit: cover;
-            object-position: center 8%;
+            object-position: center 6%;
+            z-index: 5;
+            pointer-events: none;
         }
         .hero-tags {
             font-size: 10.5px;
@@ -346,22 +347,15 @@
             0%, 100% { opacity: 1; }
             50%       { opacity: 0.3; }
         }
-        @media (max-width: 1100px) {
-            .hero { grid-template-columns: 1.15fr 1fr; }
-            .hero-left { padding: 100px 48px 64px; }
+        @media (max-width: 1200px) {
+            .hero-left { padding: 88px 48px; }
         }
         @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 58vw;
-            }
-            .hero-left { padding: 80px 24px 48px; gap: 32px; }
-            .hero-right { height: 58vw; }
-            .hero-photo-main { object-position: center 15%; }
+            .hero { background: var(--bg); }
+            .hero-left { width: 100%; padding: 80px 24px 60px; gap: 32px; }
+            .hero-photo-main { display: none; }
         }
         @media (max-width: 560px) {
-            .hero { grid-template-rows: auto 72vw; }
-            .hero-right { height: 72vw; }
             .hero-heading { font-size: clamp(22px, 6.5vw, 34px); }
         }
 
@@ -1938,10 +1932,7 @@
             </div>
         </div>
     </div>
-    <!-- Right: photo -->
-    <div class="hero-right">
-        <img src="ushanka.png" alt="Egor Krasnov" class="hero-photo-main">
-    </div>
+    <img src="ushanka.png" alt="Egor Krasnov" class="hero-photo-main">
 </div>
 
 <!-- ── MARQUEE ───────────────────────────────────────── -->
