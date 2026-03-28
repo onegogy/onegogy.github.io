@@ -259,12 +259,12 @@
             font-weight: 600;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--text-dim);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .hero-tags-dot { color: var(--border-mid); }
+        .hero-tags-dot { color: var(--text-dim); }
         .hero-name-line {
             font-size: 13px;
             font-weight: 400;
@@ -280,21 +280,26 @@
             letter-spacing: -0.02em;
             color: var(--text-primary);
         }
-        .hero-word {
+        .hero-word-clip {
             display: inline-block;
+            overflow: hidden;
             vertical-align: bottom;
-            will-change: opacity, transform, filter;
+            line-height: 1.15;
+        }
+        .hero-word {
+            display: block;
+            will-change: transform;
         }
         @keyframes wordExit {
-            from { opacity: 1; transform: translateY(0);    filter: blur(0);  }
-            to   { opacity: 0; transform: translateY(-14px); filter: blur(5px); }
+            from { transform: translateY(0); }
+            to   { transform: translateY(-105%); }
         }
         @keyframes wordEnter {
-            from { opacity: 0; transform: translateY(14px); filter: blur(5px); }
-            to   { opacity: 1; transform: translateY(0);   filter: blur(0);  }
+            from { transform: translateY(105%); }
+            to   { transform: translateY(0); }
         }
-        .hero-word-exit  { animation: wordExit  0.38s cubic-bezier(0.4,0,1,1)  forwards; }
-        .hero-word-enter { animation: wordEnter 0.48s cubic-bezier(0,0,0.2,1)  forwards; }
+        .hero-word-exit  { animation: wordExit  0.45s cubic-bezier(0.4,0,0.6,1) forwards; }
+        .hero-word-enter { animation: wordEnter 0.45s cubic-bezier(0.4,0,0.2,1) forwards; }
         .hero-contacts {
             display: flex;
             gap: 20px;
@@ -329,7 +334,7 @@
             gap: 8px;
             font-size: 10.5px;
             font-weight: 700;
-            color: var(--text-dim);
+            color: var(--text-primary);
             letter-spacing: 0.12em;
             text-transform: uppercase;
             margin-top: 20px;
@@ -1910,7 +1915,7 @@
         <div>
             <p class="hero-name-line" data-i18n="hero-name-line"></p>
             <h1 class="hero-heading">
-                <span data-i18n="hero-heading-static"></span><span class="hero-word" id="hero-word"></span>
+                <span data-i18n="hero-heading-static"></span><span class="hero-word-clip"><span class="hero-word" id="hero-word"></span></span>
             </h1>
             <div class="hero-contacts">
                 <button class="hero-contact-link" id="hero-copy-email-btn">
