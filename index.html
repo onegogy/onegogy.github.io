@@ -233,7 +233,8 @@
             background: var(--bg);
         }
         .hero-left {
-            width: 52%;
+            width: calc(100% - 96.3vh);
+            min-width: 340px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -246,14 +247,16 @@
         .hero-photo-main {
             position: absolute;
             top: 0;
-            bottom: 0;
-            left: 52%;
             right: 0;
-            object-fit: cover;
-            object-position: left top;
+            height: 100%;
+            width: auto;
             z-index: 1;
             pointer-events: none;
             display: block;
+        }
+        .hero-br { /* line break in heading */ }
+        @media (max-width: 900px) {
+            .hero-br { display: none; }
         }
         .hero-tags {
             font-size: 10.5px;
@@ -280,7 +283,6 @@
             line-height: 1.12;
             letter-spacing: -0.02em;
             color: var(--text-primary);
-            max-width: 640px;
         }
         .hero-word-clip {
             display: inline-block;
@@ -353,27 +355,11 @@
             0%, 100% { opacity: 1; }
             50%       { opacity: 0.3; }
         }
-        /* 2K (1920px+) */
-        @media (min-width: 1920px) {
-            .hero-left { padding: 40px 80px 112px 112px; }
-            .hero-heading { font-size: clamp(44px, 3.2vw, 64px); }
-        }
-        /* 4K (2560px+) */
-        @media (min-width: 2560px) {
-            .hero-left { padding: 48px 100px 128px 140px; }
-            .hero-heading { font-size: clamp(52px, 2.8vw, 72px); }
-        }
-        /* ≤ 1280px */
-        @media (max-width: 1280px) {
-            .hero-left { width: 56%; left: 0; padding: 32px 48px 88px 64px; }
-            .hero-photo-main { left: 56%; }
-        }
-        /* ≤ 900px — мобильный */
+        /* мобильный ≤ 900px */
         @media (max-width: 900px) {
             .hero { min-height: auto; }
             .hero-left { width: 100%; min-height: auto; padding: 80px 24px 60px; }
             .hero-photo-main { display: none; }
-            .hero-heading { max-width: 100%; }
         }
         @media (max-width: 560px) {
             .hero-heading { font-size: clamp(26px, 7.5vw, 38px); }
@@ -2454,7 +2440,7 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Marketing Design',
         'hero-name-line': 'Egor Krasnov, Product Designer',
-        'hero-heading-static': 'I turn complex products into simple, high-converting experiences through ',
+        'hero-heading-static': 'I turn complex<br class="hero-br">products into simple,<br class="hero-br">high-converting<br class="hero-br">experiences through<br class="hero-br">',
         'hero-status':  'Available for new projects',
 
         'about-label':   'About',
@@ -2537,7 +2523,7 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Marketing Design',
         'hero-name-line': 'Egor Krasnov, Product Designer',
-        'hero-heading-static': 'Přetvářím složité produkty v jednoduché, vysoce konvertující zážitky pomocí ',
+        'hero-heading-static': 'Přetvářím složité<br class="hero-br">produkty v jednoduché,<br class="hero-br">vysoce konvertující<br class="hero-br">zážitky pomocí<br class="hero-br">',
         'hero-status':  'Otevřen novým projektům',
 
         'about-label':   'O mně',
@@ -2620,7 +2606,7 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Маркетинг-дизайн',
         'hero-name-line': 'Егор Краснов, Продуктовый дизайнер',
-        'hero-heading-static': 'Превращаю сложные продукты в простые, высококонверсионные решения через ',
+        'hero-heading-static': 'Превращаю сложные<br class="hero-br">продукты в простые,<br class="hero-br">высококонверсионные<br class="hero-br">решения через<br class="hero-br">',
         'hero-status':  'Открыт для новых проектов',
 
         'about-label':   'Обо мне',
