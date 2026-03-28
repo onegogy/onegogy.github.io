@@ -230,28 +230,27 @@
             min-height: 100vh;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(to right, var(--bg) 50%, #0c0b09 50%);
+            background: linear-gradient(to right, var(--bg) 64%, #0c0b09 64%);
         }
         .hero-left {
-            width: 50%;
+            width: 64%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            gap: clamp(40px, 7vh, 72px);
-            padding: 88px 64px;
+            justify-content: space-between;
+            padding: 88px 64px 80px;
             position: relative;
             z-index: 2;
+            box-sizing: border-box;
         }
         .hero-photo-main {
             position: absolute;
             top: 0;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 0;
+            width: 36%;
             height: 100%;
-            width: clamp(300px, 40vw, 660px);
             object-fit: cover;
-            object-position: center 6%;
+            object-position: center 8%;
             z-index: 5;
             pointer-events: none;
         }
@@ -270,17 +269,16 @@
             font-size: 13px;
             font-weight: 400;
             color: var(--text-mid);
-            margin-top: 48px;
+            margin-bottom: 12px;
             letter-spacing: 0.01em;
         }
         .hero-heading {
             font-family: 'Geologica', sans-serif;
-            font-size: clamp(26px, 3vw, 44px);
-            font-weight: 700;
-            line-height: 1.18;
-            letter-spacing: -0.03em;
+            font-size: clamp(34px, 4.2vw, 60px);
+            font-weight: 400;
+            line-height: 1.12;
+            letter-spacing: -0.02em;
             color: var(--text-primary);
-            margin-top: 14px;
         }
         .hero-word {
             display: inline-block;
@@ -301,6 +299,7 @@
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
+            margin-top: 36px;
         }
         .hero-contact-link {
             display: inline-flex;
@@ -347,16 +346,19 @@
             0%, 100% { opacity: 1; }
             50%       { opacity: 0.3; }
         }
-        @media (max-width: 1200px) {
-            .hero-left { padding: 88px 48px; }
+        @media (max-width: 1100px) {
+            .hero { background: linear-gradient(to right, var(--bg) 60%, #0c0b09 60%); }
+            .hero-left { width: 60%; padding: 80px 48px 72px; }
+            .hero-photo-main { width: 40%; }
         }
         @media (max-width: 900px) {
-            .hero { background: var(--bg); }
-            .hero-left { width: 100%; padding: 80px 24px 60px; gap: 32px; }
+            .hero { background: var(--bg); min-height: auto; }
+            .hero-left { width: 100%; min-height: auto; padding: 80px 24px 60px; }
             .hero-photo-main { display: none; }
         }
         @media (max-width: 560px) {
-            .hero-heading { font-size: clamp(22px, 6.5vw, 34px); }
+            .hero-heading { font-size: clamp(28px, 8vw, 42px); }
+            .hero-left { padding: 76px 20px 52px; }
         }
 
         /* ─── MARQUEE ───────────────────────────────── */
@@ -1897,20 +1899,20 @@
 <div class="hero">
     <!-- Left: text content -->
     <div class="hero-left">
+        <!-- top: tags -->
+        <p class="hero-tags">
+            <span data-i18n="hero-tag1"></span>
+            <span class="hero-tags-dot">·</span>
+            <span data-i18n="hero-tag2"></span>
+            <span class="hero-tags-dot">·</span>
+            <span data-i18n="hero-tag3"></span>
+        </p>
+        <!-- middle: name + heading + contacts -->
         <div>
-            <p class="hero-tags">
-                <span data-i18n="hero-tag1"></span>
-                <span class="hero-tags-dot">·</span>
-                <span data-i18n="hero-tag2"></span>
-                <span class="hero-tags-dot">·</span>
-                <span data-i18n="hero-tag3"></span>
-            </p>
             <p class="hero-name-line" data-i18n="hero-name-line"></p>
             <h1 class="hero-heading">
                 <span data-i18n="hero-heading-static"></span><span class="hero-word" id="hero-word"></span>
             </h1>
-        </div>
-        <div>
             <div class="hero-contacts">
                 <button class="hero-contact-link" id="hero-copy-email-btn">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1926,10 +1928,11 @@
                     +420 608 851 611
                 </a>
             </div>
-            <div class="hero-status">
-                <span class="hero-status-dot"></span>
-                <span data-i18n="hero-status"></span>
-            </div>
+        </div>
+        <!-- bottom: status -->
+        <div class="hero-status">
+            <span class="hero-status-dot"></span>
+            <span data-i18n="hero-status"></span>
         </div>
     </div>
     <img src="ushanka.png" alt="Egor Krasnov" class="hero-photo-main">
