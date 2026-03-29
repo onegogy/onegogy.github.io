@@ -227,28 +227,35 @@
 
         /* ─── HERO ──────────────────────────────────── */
         .hero {
+            --col: 600px;
             min-height: 100vh;
             position: relative;
             overflow: hidden;
             background: var(--bg);
         }
+        @media (min-width: 1367px) {
+            .hero { --col: max(712px, calc((100vw - 1160px) / 2 + 712px)); }
+        }
         .hero-left {
-            width: calc(100% - 96.3vh);
-            min-width: 340px;
+            width: var(--col);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 36px 64px 96px 88px;
+            padding: 36px 40px 96px 40px;
             position: relative;
             z-index: 2;
             box-sizing: border-box;
+            text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 24px rgba(255,255,255,0.6);
+        }
+        @media (min-width: 1367px) {
+            .hero-left { padding-left: max(32px, calc((100vw - 1160px) / 2 + 32px)); }
         }
         .hero-photo-main {
             position: absolute;
             top: 0;
             right: 0;
-            height: 100%;
+            height: 100vh;
             width: auto;
             z-index: 1;
             pointer-events: none;
@@ -313,8 +320,8 @@
         .hero-contact-link {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            font-size: 13px;
+            gap: 8px;
+            font-size: 15px;
             color: var(--text-mid);
             text-decoration: underline;
             text-underline-offset: 3px;
@@ -331,7 +338,7 @@
             color: var(--text-primary);
             text-decoration-color: rgba(0,0,0,0.6);
         }
-        .hero-contact-link svg { flex-shrink: 0; }
+        .hero-contact-link svg { flex-shrink: 0; width: 16px; height: 16px; }
         .hero-status {
             display: inline-flex;
             align-items: center;
@@ -355,15 +362,26 @@
             0%, 100% { opacity: 1; }
             50%       { opacity: 0.3; }
         }
-        /* мобильный ≤ 900px */
+        .hero-photo-mobile {
+            display: none;
+            width: 100%;
+            height: auto;
+            position: relative;
+            z-index: 0;
+            margin-top: -80px;
+        }
+        /* планшет и мобильный ≤ 900px */
         @media (max-width: 900px) {
-            .hero { min-height: auto; }
-            .hero-left { width: 100%; min-height: auto; padding: 80px 24px 60px; }
+            .hero { min-height: auto; overflow: hidden; }
+            .hero-left { width: 100%; min-height: auto; padding: 24px 24px 60px; }
+            .hero-tags { margin-bottom: 20px; }
             .hero-photo-main { display: none; }
+            .hero-photo-mobile { display: block; }
         }
         @media (max-width: 560px) {
             .hero-heading { font-size: clamp(26px, 7.5vw, 38px); }
-            .hero-left { padding: 76px 20px 52px; }
+            .hero-left { padding: 24px 20px 52px; }
+            .hero-tags { margin-bottom: 20px; }
         }
 
         /* ─── MARQUEE ───────────────────────────────── */
@@ -1941,6 +1959,7 @@
         </div>
     </div>
     <img src="ushanka.png" alt="Egor Krasnov" class="hero-photo-main">
+    <img src="ushanka-2.png" alt="Egor Krasnov" class="hero-photo-mobile">
 </div>
 
 <!-- ── MARQUEE ───────────────────────────────────────── -->
@@ -3138,7 +3157,6 @@ heroStartRotator(currentLang);
 
 
 <script src="splash-cursor.js"></script>
-<script src="tilted-card.js"></script>
 
 </body>
 </html>
