@@ -315,7 +315,7 @@
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
-            margin-top: 36px;
+            margin-top: 16px;
         }
         .hero-contact-link {
             display: inline-flex;
@@ -379,7 +379,7 @@
             .hero-photo-mobile { display: block; }
         }
         @media (max-width: 560px) {
-            .hero-heading { font-size: clamp(26px, 7.5vw, 38px); }
+            .hero-heading { font-size: 28px; line-height: 1.29; max-width: 320px; word-spacing: 0.12em; }
             .hero-left { padding: 24px 20px 52px; }
             .hero-tags { margin-bottom: 20px; }
         }
@@ -458,8 +458,8 @@
         }
         .about-heading {
             font-family: 'Geologica', sans-serif;
-            font-size: clamp(30px, 3.2vw, 44px);
-            font-weight: 700;
+            font-size: clamp(30px, 4.2vw, 58px);
+            font-weight: 500;
             line-height: 1.15;
             letter-spacing: -0.03em;
             color: var(--text-primary);
@@ -645,7 +645,7 @@
         .svc-row-title {
             font-family: 'Geologica', sans-serif;
             font-size: clamp(28px, 3.6vw, 50px);
-            font-weight: 700;
+            font-weight: 500;
             letter-spacing: -0.04em;
             line-height: 1.0;
             color: var(--text-primary);
@@ -744,7 +744,7 @@
         .proc-card-title {
             font-family: 'Geologica', sans-serif;
             font-size: clamp(22px, 2.4vw, 32px);
-            font-weight: 700;
+            font-weight: 500;
             letter-spacing: -0.03em;
             color: var(--text-primary);
             margin-bottom: 14px;
@@ -815,7 +815,7 @@
         .cs-item-title {
             font-family: 'Geologica', sans-serif;
             font-size: clamp(34px, 4.2vw, 58px);
-            font-weight: 700;
+            font-weight: 500;
             letter-spacing: -0.045em;
             color: var(--text-primary);
             line-height: 1.0;
@@ -1529,7 +1529,7 @@
         .contact-heading {
             font-family: 'Geologica', sans-serif;
             font-size: clamp(52px, 9vw, 112px);
-            font-weight: 700;
+            font-weight: 500;
             letter-spacing: -0.045em;
             line-height: 0.9;
             color: var(--text-primary);
@@ -2459,7 +2459,7 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Marketing Design',
         'hero-name-line': 'Egor Krasnov, Product Designer',
-        'hero-heading-static': 'I turn complex<br class="hero-br">products into simple,<br class="hero-br">high-converting<br class="hero-br">experiences through<br class="hero-br">',
+        'hero-heading-static': 'I turn complex <br class="hero-br">products into simple, <br class="hero-br">high-converting <br class="hero-br">experiences through <br class="hero-br">',
         'hero-status':  'Available for new projects',
 
         'about-label':   'About',
@@ -2542,11 +2542,11 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Marketing Design',
         'hero-name-line': 'Egor Krasnov, Product Designer',
-        'hero-heading-static': 'Přetvářím složité<br class="hero-br">produkty v jednoduché,<br class="hero-br">vysoce konvertující<br class="hero-br">zážitky pomocí<br class="hero-br">',
+        'hero-heading-static': 'Přetvářím složité <br class="hero-br">produkty v jednoduché, <br class="hero-br">vysoce konvertující <br class="hero-br">zážitky pomocí <br class="hero-br">',
         'hero-status':  'Otevřen novým projektům',
 
         'about-label':   'O mně',
-        'about-heading': 'Přeměňuji složitost<br>v přehlednost',
+        'about-heading': 'Přeměňuji složitost<br>v&nbsp;přehlednost',
         'about-p1':      'Od roku 2020 pomáhám firmám vytvářet digitální produkty, na které mohou být opravdu hrdé — od <strong>mobilních aplikací a komplexních platforem</strong> až po e-commerce obchody a landing pages.',
         'about-p2':      'Moje práce je <strong>najít, co produkt brzdí, a pomoci to napravit</strong>. To znamená porozumět byznysu, uživatelům i trhu — a pak navrhnout řešení, která jsou praktická, ověřená a připravená k nasazení.',
         'about-p3':      'Pracuji <strong>jak samostatně, tak v týmech</strong> s designéry, vývojáři a marketéry na malých i velkých softwarových produktech.',
@@ -2625,7 +2625,7 @@ const translations = {
         'hero-tag2':  'UI',
         'hero-tag3':  'Маркетинг-дизайн',
         'hero-name-line': 'Егор Краснов, Продуктовый дизайнер',
-        'hero-heading-static': 'Превращаю сложные<br class="hero-br">продукты в простые,<br class="hero-br">высококонверсионные<br class="hero-br">решения через<br class="hero-br">',
+        'hero-heading-static': 'Превращаю сложные <br class="hero-br">продукты в простые, <br class="hero-br">высококонверсионные <br class="hero-br">решения через <br class="hero-br">',
         'hero-status':  'Открыт для новых проектов',
 
         'about-label':   'Обо мне',
@@ -2803,7 +2803,7 @@ heroCopyBtn.addEventListener('click', () => {
 // ── HERO WORD ROTATOR ───────────────────────────
 const heroWordLists = {
     en: ['Artificial Intelligence', 'UX/UI Design', 'Vibe-Coding', 'E-Commerce', 'Marketing', 'Long-term Partnership'],
-    cs: ['umělou inteligenci', 'UX/UI design', 'vibe-coding', 'e-commerce', 'marketing', 'dlouhodobé partnerství'],
+    cs: ['umělou inteligenci', 'UX/UI design', 'vibe-coding', 'e-commerce', 'marketing', 'partnerství'],
     ru: ['искусственный интеллект', 'UX/UI дизайн', 'вайб-кодинг', 'e-commerce', 'маркетинг', 'долгосрочное партнёрство'],
 };
 const heroWordEl = document.getElementById('hero-word');
